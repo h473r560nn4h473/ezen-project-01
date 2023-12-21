@@ -10,11 +10,21 @@
             <div class="list-title2">
               <div class="search_bar">
                 <input v-model="keyword" class="form-control me-2" type="text" placeholder="아이디 검색"
-                  @keyup.enter="getUserList()">
-                <button class="btn btn-secondary" type="submit" @click="getUserList()"><i class="fa fa-search"></i></button>
+                  @keyup.enter="getUserList(sortCase)">
+                <button class="btn btn-secondary" type="submit" @click="getUserList(sortCase)"><i class="fa fa-search"></i></button>
+              </div>
+              <div class="list-title2">
+                <div class="dropdown">
+                  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1"
+                    data-bs-toggle="dropdown" aria-expanded="false" style="border: none;"> {{ sortCase }}
+                  </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                      <li><a class="dropdown-item" href="#" @click="sortList(0)">오래된 순</a></li>
+                      <li><a class="dropdown-item" href="#" @click="sortList(1)">최근 순</a></li>
+                    </ul>
+                </div>
               </div>
             </div>
-
           </div>
         </caption>
         <thead class="table-light">
@@ -111,6 +121,7 @@ export default {
     return {
       userList: [],
       pet: [],
+      sortCase: "최근 순",
       keyword: '',
       pageUserList: [],
       pageNum: 0,
@@ -162,14 +173,14 @@ export default {
       const start = 0 + this.pageNum * this.onePageCnt
       this.pageUserList = this.userList.slice(start, start + this.onePageCnt);
     },
-    async getUserList() {
+    async getUserList(sortCaseNum) {
       let keyword = 'none'
 
       if (this.keyword != '') {
         keyword = this.keyword;
       }
       try {
-        const response = await axios.get(`http://localhost:3000/auth/admin/userlist/${keyword}`);
+        const response = await axios.get(`http://localhost:3000/auth/admin/userlist/${sortCaseNum}/${keyword}`);
         this.userList = response.data;
         this.pageCnt = Math.ceil(this.userList.length / this.onePageCnt)
         this.setPage(1)
@@ -177,6 +188,17 @@ export default {
       } catch (error) {
         console.error(error);
       }
+    },
+    sortList(sortNum) {
+      if (sortNum == 0) {
+        this.sortCase = "오래된 순"
+      } else {
+        this.sortCase = "최근 순"
+      }
+      this.getUserList(sortNum)
+        .then(() => {
+          this.$router.push({ path: '/admin/userlist' });
+        })
     },
     getSocialType(socialType) {
       if (socialType === 0) {

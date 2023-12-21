@@ -84,9 +84,18 @@ router.post('/admin_check', function (request, response) {
     })
 })
 
-// 회원리스트
-router.get('/admin/userlist/:keyword', function (request, response, next) {
+function sortCaseReplace(sortCase) {
+    let order = ` ORDER BY user_no`; // 오래된 순
+    if (sortCase == 1) { // 최근 순
+        order = ` ORDER BY user_no DESC`;
+    }
+    return order;
+}
 
+// 회원리스트
+router.get('/admin/userlist/:sortCase/:keyword', function (request, response, next) {
+
+    const sortCase = request.params.sortCase;
     const keyword = request.params.keyword;
     let search = '';
 
@@ -94,7 +103,9 @@ router.get('/admin/userlist/:keyword', function (request, response, next) {
         search = ' AND user_id Like "%' + keyword + '%" ';
     }
 
-    db.query(sql.userlist + search, function (error, results, fields) {
+    const arrange = sortCaseReplace(sortCase);
+
+    db.query(sql.userlist + search + arrange, function (error, results, fields) {
         if (error) {
             console.error(error);
             return response.status(500).json({ error: '회원리스트에러' });
