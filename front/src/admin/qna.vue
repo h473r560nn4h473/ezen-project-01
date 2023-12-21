@@ -43,7 +43,7 @@
                         <td>{{ qna.qna_title }}</td>
                         <td>{{ formatDateTime(qna.qna_date) }}</td>
                         <td>{{ qna.qna_answer }}</td>
-                        <td>{{ getQnaState(qna.qna_state) }}</td>
+                        <td>{{ getQnaState(qna) }}</td>
                         <td><button class="btn btn-outline-danger" @click="confirmDeleteQna(qna)">삭제</button></td>
                     </tr>
                 </tbody>
@@ -150,7 +150,7 @@ export default {
             return formattedDateTime;
         },
         getQnaState(qna) {
-            if (qna.qna_answer != null && qna.qna_state === 1) {
+            if (qna.qna_answer !== null && qna.qna_state === 1) {
                 return '답변완료';
             } else {
                 return '답변대기';
