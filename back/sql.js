@@ -11,7 +11,7 @@ pet_info: `SELECT pet_no, pet_nm, pet_type, pet_age, pet_sex, pet_img
                 FROM tb_user
                 WHERE user_no = ?`,
 deleteUser: `DELETE FROM tb_user WHERE user_no = ?`,
-reviewdoclist: `SELECT rvw_no, pet_no, doc_id, rvw_title, rvw_date FROM tb_review`,
+reviewdoclist: `SELECT rvw_no, pet_no, doc_id, rvw_title, rvw_date, rvw_count FROM tb_review`,
 deleteReview: `DELETE FROM tb_review WHERE rvw_no = ?`,
 qnalist: `SELECT qna_no, user_no, qna_title, qna_date, qna_answer, qna_state FROM tb_qna`,
 deleteQna: `DELETE FROM tb_qna WHERE qna_no = ?`,

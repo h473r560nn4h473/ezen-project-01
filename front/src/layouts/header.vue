@@ -5,34 +5,14 @@
         <div class="navbar_logo title" @click="goToHome()">
           <img src="../assets/logo.png" alt="로고">
         </div>
-
-        <div class="navbar_search">
-          <input v-model="keyword" type="text" placeholder="검색" @keyup.enter="searchKeyword(keyword)">
-          <button class="searchbtn" type="submit" @click="searchKeyword(keyword)"><img src="../assets/ch_ico.png"
-              alt="search"></button>
-        </div>
-
         <!-- 추가 -->
         <ul class="navbar_icons">
-          <li class="myPage" @click="goToMypage()"><img src="../assets/mypage.png" alt="mypage"></li>
-          <li class="cart" @click="goToCart()"><img src="../assets/cart.png" alt="cart">
-            <transition-group name="fade" mode="out-in">
-              <div class="cartcount" v-if="cartCoun !== 0">{{ cartCoun }}</div>
-            </transition-group>
-          </li>
-          <li class="qna" @click="goToQna()"><img src="../assets/Qna.png" alt="qna"></li>
+          <li class="nreview" @click="goToNReview()"><img :src="require(`../assets/imgempty.png`)" alt="nreview"></li>
         </ul>
 
       </nav>
 
       <nav class="navbar_bottom" aria-label="">
-        <ul class="category">
-          <li @click="goToCategory(1)">사료</li>
-          <li @click="goToCategory(2)">간식</li>
-          <li @click="goToCategory(3)">용품</li>
-          <li @click="goToCategory(4)">의류</li>
-        </ul>
-
         <ul v-if="user.user_id == ''" class="join">
           <li @click="goToLogin">로그인</li>
           <li @click="goToJoin">회원가입</li>
@@ -57,19 +37,12 @@ import axios from 'axios';
 export default {
   data() {
     return {
-      cartCoun: 0,                  //추가
       adminCheck: 0,
-      keyword: this.$route.query.keyword,
     }
   },
   computed: {
     user() {
       return this.$store.state.user;
-    }
-  },
-  created() {                       //추가
-    if (this.user.user_id != '') {
-      this.getCartCount();
     }
   },
   mounted() {
@@ -95,66 +68,17 @@ export default {
     }
   },
   methods: {
-    hideCartCount() {
-      const cartCountElement = document.querySelector('.cartcount');
-      if (cartCountElement) {
-        cartCountElement.style.display = 'none';
-      }
-    },
-    showCartCount() {
-      const cartCountElement = document.querySelector('.cartcount');
-      if (cartCountElement) {
-        cartCountElement.style.display = 'block';
-      }
-    },
-    searchKeyword(keyword) {
-      if (this.keyword) {
-        window.location.href = 'http://localhost:8080/goodsSearch?keyword=' + keyword;
-      }
-    },
-    //추가
-    async getCartCount() {
-      try {
-        const response = await axios.get(`http://localhost:3000/goods/basketList/${this.user.user_no}`);
-        const basketList = response.data;
-        this.cartCoun = basketList.length;
-
-        // 데이터가 0일 때 숨기기
-        if (this.cartCoun === 0) {
-          this.hideCartCount();
-        } else {
-          this.showCartCount();
-        }
-      } catch (error) {
-        console.error(error);
-      }
-
-    },
-    goToQna() {
-      window.location.href = `http://localhost:8080/qnaMain?page=1`;
-    },
-    async goToCategory(category) {
-      try {
-        window.location.href = `http://localhost:8080/goodsCate/${category}`;
-
-      } catch (error) {
-        console.error('전송 실패:', error);
-      }
+    goToNReview() {
+      window.location.href = `http://localhost:8080/nreview`;
     },
     goToLogin() {
       this.$router.push({ path: '/login' });
     },
     goToJoin() {
-      this.$router.push({ path: '/joinselect' });
+      this.$router.push({ path: '/joincond' });
     },
     goToAdmin() {
-      this.$router.push({ path: '/admin/goodslist' });
-    },
-    goToMypage() {
-      this.$router.push({ path: '/mypage' });
-    },
-    goToCart() {
-      this.$router.push({ path: '/basket' });
+      this.$router.push({ path: '/admin/userlist' });
     },
     logout() {
       this.$store.commit("user", {});
@@ -178,10 +102,6 @@ export default {
 </script>
   
 <style scoped>
-.title {
-  cursor: pointer;
-}
-
 * {
   margin: 0;
   padding: 0;
@@ -197,7 +117,6 @@ a {
 }
 
 .header_wrapper {
-  font-family: 'GmarketSansMedium';
   font-size: 15px;
   position: fixed;
   top: 0;
@@ -243,7 +162,6 @@ input[type='text'] {
   font-size: 1rem;
   outline: none;
   background-color: rgb(251, 251, 251);
-  font-family: 'GmarketSansMedium';
   border: none;
   margin-right: 8px;
 }
@@ -256,22 +174,6 @@ input::placeholder {
   color: #aaa;
 }
 
-.searchbtn {
-  display: flex;
-  border: 0;
-  height: 38px;
-  width: 50px;
-  position: relative;
-  background: none;
-  cursor: pointer;
-}
-
-.searchbtn img {
-  position: relative;
-  top: -3px;
-  scale: 70%;
-}
-
 /* --------------------------------- icon */
 .navbar_icons {
   display: flex;
@@ -281,51 +183,17 @@ input::placeholder {
   position: relative;
 }
 
-.myPage {
-  scale: 75%;
-  margin-left: 16px;
-}
-
-.cart {
-  scale: 78%;
-  margin-left: 24px;
-}
-
-.cart .cartcount {
-  position: absolute;
-  width: 32px;
-  height: 22px;
-  top: -10px;
-  right: -12px;
-  padding: 5px 0px 4px 0px;
-  font-size: 1rem;
-  font-family: GmarketSansMedium;
-  text-align: center;
-  box-sizing: content-box;
-  border-radius: 30px;
-  color: #fff;
-  background: #ff5e00;
-}
-
 /* .fade-enter-active, .fade-leave-active { transition: opacity 0.3s ease-in-out; }
 .fade-enter, .fade-leave-to {
   opacity: 0;
 } */
 
-.qna {
-  scale: 100%;
+.nreview {
+  scale: 20%;
   margin-left: 16px;
 }
 
-.myPage:hover {
-  filter: opacity(0.2) drop-shadow(0 0 0 #df7a00);
-}
-
-.cart:hover {
-  filter: opacity(0.2) drop-shadow(0 0 0 #df7a00);
-}
-
-.qna:hover {
+.nreview:hover {
   filter: opacity(0.2) drop-shadow(0 0 0 #df7a00);
 }
 
@@ -335,51 +203,7 @@ input::placeholder {
   align-items: center;
   display: flex;
   height: 60px;
-  font-family: 'GmarketSansMedium';
 }
-
-.category {
-  display: flex;
-  position: relative;
-  margin: auto;
-}
-
-/* 사료, 간식, 용품 */
-.category li {
-  font-size: 1rem;
-  display: inline-block;
-  margin-left: 30PX;
-  width: 8rem;
-  height: 30px;
-  margin-top: 16px;
-  text-align: center;
-}
-
-.category li:nth-last-child(4) {
-  margin-left: 0px;
-}
-
-.category li:hover {
-  cursor: pointer;
-}
-
-.category li:after {
-  display: block;
-  width: 4rem;
-  content: '';
-  border-bottom: solid 2px #fff;
-  transform: scaleX(0);
-  transition: transform 250ms ease-in-out;
-  border: 1.5px solid #FFAF7D;
-  margin: auto;
-  margin-top: 6PX;
-  border-radius: 30PX;
-}
-
-.category li:hover:after {
-  transform: scaleX(1);
-}
-
 
 /* 관리, 로그아웃 */
 .join {

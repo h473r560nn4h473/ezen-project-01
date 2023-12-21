@@ -12,9 +12,11 @@ import defaultLayout from './layouts/defaultLayout.vue'
 import adminLayout from './layouts/adminLayout.vue'
 
 // 유저 페이지
+import HelloWorld from './views/HelloWorld.vue'
 import JoinPage from './views/join.vue'
 import JoincondPage from './views/joincond.vue'
 import LoginPage from './views/login.vue'
+import nReviewPage from './views/nreview.vue'
 
 // 관리자 페이지
 import UserInfo from './admin/userInfo.vue'
@@ -30,6 +32,10 @@ const routes = [
         children: [
             {
                 path: '/',
+                component: HelloWorld,
+            },
+            {
+                path: '/login',
                 component: LoginPage,
             },
             {
@@ -39,6 +45,10 @@ const routes = [
             {
                 path: '/joincond',
                 component: JoincondPage,
+            },
+            {
+                path: '/nreview',
+                component: nReviewPage,
             },
         ]
     },
