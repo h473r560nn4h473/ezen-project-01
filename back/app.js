@@ -13,12 +13,12 @@ app.use(express.urlencoded({ extended: true }));
 const authRouter = require('./routes/auth');
 const reviewRouter = require('./routes/review');
 const qnaRouter = require('./routes/qna');
-// const mypageRouter = require('./routes/mypage');
+const reservationRouter = require('./routes/reservation');
 
 app.use('/auth', authRouter);
 app.use('/review', reviewRouter);
 app.use('/qna', qnaRouter);
-// app.use('/mypage', mypageRouter);
+app.use('/reservation', reservationRouter);
 
 app.listen(3000, function() {
     console.log('Server Running at http://localhost:3000');

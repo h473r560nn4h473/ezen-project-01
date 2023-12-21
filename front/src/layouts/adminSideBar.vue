@@ -19,10 +19,11 @@
                 <i class="fa fa-question"></i>
                 <p>QnA 답변</p>
             </router-link>
-            <!-- <router-link to="/admin/booklist">
+            <router-link to="/admin/reservationlist">
                 <i class="fa fa-user-circle"></i>
                 <p>예약 관리</p>
-            </router-link> -->
+            </router-link>
+            <br />
             <button type="button" class="btn" @click="logout">로그아웃</button>
         </div>
     </div>

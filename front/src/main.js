@@ -20,6 +20,7 @@ import LoginPage from './views/login.vue'
 import UserInfo from './admin/userInfo.vue'
 import ReviewList from './admin/review.vue'
 import Qna from './admin/qna.vue'
+import ReservationList from './admin/reservation.vue'
 
 const routes = [
     {
@@ -57,6 +58,10 @@ const routes = [
             {
                 path: 'qnalist',
                 component: Qna,
+            },
+            {
+                path: 'reservationlist',
+                component: ReservationList,
             },
         ]
     },

@@ -15,4 +15,6 @@ reviewdoclist: `SELECT rvw_no, pet_no, doc_id, rvw_title, rvw_date FROM tb_revie
 deleteReview: `DELETE FROM tb_review WHERE rvw_no = ?`,
 qnalist: `SELECT qna_no, user_no, qna_title, qna_date, qna_answer, qna_state FROM tb_qna`,
 deleteQna: `DELETE FROM tb_qna WHERE qna_no = ?`,
+reservationlist: `SELECT res_no, res_title, res_date, res_time, doc_id, res_content, pet_no FROM tb_reservation`,
+deleteReservation: `DELETE FROM tb_reservation WHERE res_no = ?`,
 }
