@@ -1,0 +1,7 @@
+mypart_
+join
+login
+admin_userlist
+admin_reviewlist
+admin_qnalist
+admin_booklist
