@@ -3,11 +3,11 @@
     <div class="header_wrapper">
       <nav class="navbar_top" aria-label="">
         <div class="navbar_logo title" @click="goToHome()">
-          <img src="../assets/logo.png" alt="로고">
+          <img :src="require(`../assets/logo.png`)" alt="로고">
         </div>
         <!-- 추가 -->
         <ul class="navbar_icons">
-          <li class="nreview" @click="goToNReview()"><img :src="require(`../assets/imgempty.png`)" alt="nreview"></li>
+          <li @click="goToNReview()">진료기록</li>
         </ul>
 
       </nav>
@@ -69,7 +69,7 @@ export default {
   },
   methods: {
     goToNReview() {
-      window.location.href = `http://localhost:8080/nreview`;
+      window.location.href = `http://localhost:8080/review`;
     },
     goToLogin() {
       this.$router.push({ path: '/login' });
@@ -138,7 +138,7 @@ a {
 
 /* ------------------------------------------------------ logo */
 .navbar_logo {
-  scale: 70%;
+  scale: 50%;
   position: relative;
   left: -60px;
   padding: 0 0 0 16px;
@@ -172,29 +172,6 @@ input[type='text']:focus {
 
 input::placeholder {
   color: #aaa;
-}
-
-/* --------------------------------- icon */
-.navbar_icons {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  scale: 80%;
-  position: relative;
-}
-
-/* .fade-enter-active, .fade-leave-active { transition: opacity 0.3s ease-in-out; }
-.fade-enter, .fade-leave-to {
-  opacity: 0;
-} */
-
-.nreview {
-  scale: 20%;
-  margin-left: 16px;
-}
-
-.nreview:hover {
-  filter: opacity(0.2) drop-shadow(0 0 0 #df7a00);
 }
 
 /* ----------------------------navbar_bottom */
@@ -255,7 +232,7 @@ input::placeholder {
   }
 
   .navbar_logo {
-    scale: 70%;
+    scale: 50%;
     position: relative;
   }
 

@@ -20,6 +20,8 @@
                                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                                     <li><a class="dropdown-item" href="#" @click="sortList(0)">오래된 순</a></li>
                                     <li><a class="dropdown-item" href="#" @click="sortList(1)">최근 순</a></li>
+                                    <li><a class="dropdown-item" href="#" @click="sortList(2)">조회수 낮은 순</a></li>
+                                    <li><a class="dropdown-item" href="#" @click="sortList(3)">조회수 높은 순</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -32,6 +34,7 @@
                         <th scope="col">의사 아이디</th>
                         <th scope="col">진료명</th>
                         <th scope="col">작성일</th>
+                        <!-- <th scope="col">동물사진</th> -->
                         <th scope="col"> </th>
                     </tr>
                 </thead>
@@ -42,6 +45,14 @@
                         <td>{{ review.doc_id }}</td>
                         <td>{{ review.rvw_title }}</td>
                         <td>{{ formatDateTime(review.rvw_date) }}</td>
+                        <!-- <td>
+                            <div v-if="pet.pet_img" class="col-md-4 pet-img" style="text-align : center;">
+                                <img :src="require(`../../../back/uploads/uploadPet/${pet.pet_img}`)" alt="..." style="border-radius:100%">
+                            </div>
+                            <div v-else class="col-md-4 pet-img" style="text-align : center;">
+                                <img :src="require(`../assets/imgempty.png`)" class="img-fluid rounded-start" alt="..." style="border-radius:100%">
+                            </div>
+                        </td> -->
                         <td><button class="btn btn-outline-danger" @click="confirmDeleteReview(review)">삭제</button></td>
                     </tr>
                 </tbody>
@@ -67,6 +78,7 @@ export default {
     data() {
         return {
             reviewList: [],
+            // pet: [],
             sortCase: "최근 순",
             keyword: '',
             pageReviewList: [],  // 한 페이지에 보여줄 굿즈 리스트를 잘라 담을 새 리스트
@@ -134,8 +146,14 @@ export default {
         sortList(sortNum) {
             if (sortNum == 0) {
                 this.sortCase = "오래된 순"
-            } else {
+            } else if (sortNum == 1) {
                 this.sortCase = "최근 순"
+            }
+            else if (sortNum == 2) {
+                this.sortCase = "조회수 낮은 순"
+            }
+            else if (sortNum == 3) {
+                this.sortCase = "조회수 높은 순"
             }
             this.getReviewList(sortNum)
                 .then(() => {
@@ -216,5 +234,11 @@ td {
 .search_bar {
     margin: auto;
     display: flex;
+}
+
+.pet-img {
+    width: auto;
+    height: auto;
+    max-width: 100px;
 }
 </style>

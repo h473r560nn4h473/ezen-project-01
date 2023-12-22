@@ -9,25 +9,26 @@
                         <h2>진료기록 관리</h2>
                         <div class="search_bar">
                             <input v-model="keyword" class="form-control me-2" type="text" placeholder="의사 아이디 검색"
-                                @keyup.enter="getReviewList(sortCase)">
-                            <button class="btn btn-secondary" type="submit" @click="getReviewList(sortCase)"><i class="fa fa-search"></i></button>
+                                @keyup.enter="getNReviewList(sortCase)">
+                            <button class="btn btn-secondary" type="submit" @click="getNReviewList(sortCase)"><i class="fa fa-search"></i></button>
                         </div>
-                        <div class="list-title2">
-                            <div class="dropdown">
-                                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1"
-                                    data-bs-toggle="dropdown" aria-expanded="false" style="border: none;"> {{ sortCase }}
-                                </button>
-                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                    <li><a class="dropdown-item" href="#" @click="sortList(0)">오래된 순</a></li>
-                                    <li><a class="dropdown-item" href="#" @click="sortList(1)">최근 순</a></li>
-                                </ul>
-                            </div>
+                        <div class="dropdown">
+                            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1"
+                                data-bs-toggle="dropdown" aria-expanded="false" style="border: none;"> {{ sortCase }}
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                <li><a class="dropdown-item" href="#" @click="sortList(0)">오래된 순</a></li>
+                                <li><a class="dropdown-item" href="#" @click="sortList(1)">최근 순</a></li>
+                                <li><a class="dropdown-item" href="#" @click="sortList(2)">조회수 낮은 순</a></li>
+                                <li><a class="dropdown-item" href="#" @click="sortList(3)">조회수 높은 순</a></li>
+                            </ul>
                         </div>
                     </div>
                 </caption>
                 <thead class="table-light">
                     <tr>
                         <th scope="col">번호</th>
+                        <th scope="col">등록번호</th>
                         <th scope="col">동물등록번호</th>
                         <th scope="col">의사 아이디</th>
                         <th scope="col">진료명</th>
@@ -36,8 +37,9 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="(review, i) in pageReviewList" :key="i">
+                    <tr v-for="(review, i) in pageReviewList" :key="i" @click="movetonreview(review.rvw_no)">
                         <th scope="row">{{ pageNum * onePageCnt + i + 1 }}</th>
+                        <td>{{ review.rvw_no }}</td>
                         <td>{{ review.pet_no }}</td>
                         <td>{{ review.doc_id }}</td>
                         <td>{{ review.rvw_title }}</td>
@@ -66,7 +68,7 @@ import axios from 'axios';
 export default {
     data() {
         return {
-            reviewList: [],
+            nreviewList: [],
             sortCase: "최근 순",
             keyword: '',
             pageReviewList: [],  // 한 페이지에 보여줄 굿즈 리스트를 잘라 담을 새 리스트
@@ -81,7 +83,7 @@ export default {
         },
     },
     created() {
-        this.getReviewList();
+        this.getNReviewList();
     },
     methods: {
         setPage(page) {
@@ -91,18 +93,18 @@ export default {
         },
         sliceList() {
             const start = 0 + this.pageNum * this.onePageCnt
-            this.pageReviewList = this.reviewList.slice(start, start + this.onePageCnt);
+            this.pageReviewList = this.nreviewList.slice(start, start + this.onePageCnt);
         },
-        async getReviewList(sortCaseNum) {
+        async getNReviewList(sortCaseNum) {
             let keyword = 'none'
 
             if (this.keyword != '') {
                 keyword = this.keyword;
             }
             try {
-                const response = await axios.get(`http://localhost:3000/review/nreview/${sortCaseNum}/${keyword}`);
-                this.reviewList = response.data;
-                this.pageCnt = Math.ceil(this.reviewList.length / this.onePageCnt)
+                const response = await axios.get(`http://localhost:3000/review/review/${sortCaseNum}/${keyword}`);
+                this.nreviewList = response.data;
+                this.pageCnt = Math.ceil(this.nreviewList.length / this.onePageCnt)
                 this.setPage(1)
 
             } catch (error) {
@@ -112,18 +114,27 @@ export default {
         sortList(sortNum) {
             if (sortNum == 0) {
                 this.sortCase = "오래된 순"
-            } else {
+            } else if (sortNum == 1) {
                 this.sortCase = "최근 순"
             }
-            this.getReviewList(sortNum)
+            else if (sortNum == 2) {
+                this.sortCase = "조회수 낮은 순"
+            }
+            else if (sortNum == 3) {
+                this.sortCase = "조회수 높은 순"
+            }
+            this.getNReviewList(sortNum)
                 .then(() => {
-                    this.$router.push({ path: '/nreview' });
+                    this.$router.push({ path: '/review' });
                 })
         },
         formatDateTime(dateTime) {
             const date = new Date(dateTime);
             const formattedDateTime = date.toLocaleString('ko-KR');
             return formattedDateTime;
+        },
+        movetonreview(rvw_no) {
+            window.location.href = window.location.pathname + '/reviewdetail?rvw_no=' + rvw_no;
         },
     }
 };

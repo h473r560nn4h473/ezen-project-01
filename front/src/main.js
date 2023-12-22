@@ -16,7 +16,8 @@ import HelloWorld from './views/HelloWorld.vue'
 import JoinPage from './views/join.vue'
 import JoincondPage from './views/joincond.vue'
 import LoginPage from './views/login.vue'
-import nReviewPage from './views/nreview.vue'
+import nReviewPage from './views/review.vue'
+import nReviewDetailPage from './views/reviewdetail.vue'
 
 // 관리자 페이지
 import UserInfo from './admin/userInfo.vue'
@@ -47,8 +48,12 @@ const routes = [
                 component: JoincondPage,
             },
             {
-                path: '/nreview',
+                path: '/review',
                 component: nReviewPage,
+            },
+            {
+                path: '/review/reviewdetail/',
+                component: nReviewDetailPage,
             },
         ]
     },

@@ -13,6 +13,8 @@ pet_info: `SELECT pet_no, pet_nm, pet_type, pet_age, pet_sex, pet_img
 deleteUser: `DELETE FROM tb_user WHERE user_no = ?`,
 reviewdoclist: `SELECT rvw_no, pet_no, doc_id, rvw_title, rvw_date, rvw_count FROM tb_review`,
 deleteReview: `DELETE FROM tb_review WHERE rvw_no = ?`,
+reviewdetail: `SELECT * FROM tb_review WHERE rvw_no = ?`,
+reviewhit: `UPDATE tb_review SET rvw_count = rvw_count + 1 WHERE rvw_no = ?`,
 qnalist: `SELECT qna_no, user_no, qna_title, qna_date, qna_answer, qna_state FROM tb_qna`,
 deleteQna: `DELETE FROM tb_qna WHERE qna_no = ?`,
 reservationlist: `SELECT res_no, res_title, res_date, res_time, doc_id, res_content, pet_no FROM tb_reservation`,
