@@ -4,23 +4,31 @@ const db = require('../db.js');
 const sql = require('../sql.js');
 const bcrypt = require('bcrypt');
 
-function sortCaseReplace(sortCase) {
-    let order = ` ORDER BY rvw_date`; // 오래된 순
-    if (sortCase == 1) { // 최근 순
-        order = ` ORDER BY rvw_date DESC`;
+function sortNCaseReplace(sortNCase) {
+    let order = ` ORDER BY rvw_date DESC`; // 최근 순
+    if (sortNCase == 1) { // 오래된 순
+        order = ` ORDER BY rvw_date`;
     }
-    else if (sortCase == 2) { // 조회수 낮은 순 
-        order = ` ORDER BY rvw_count`;
-    }
-    else if (sortCase == 3) { // 조회수 높은 순 
+    if (sortNCase == 2) { // 조회수 높은 순
         order = ` ORDER BY rvw_count DESC`;
+    }
+    if (sortNCase == 3) { // 조회수 낮은 순
+        order = ` ORDER BY rvw_count`;
     }
     return order;
 }
 
-router.get('/review/:sortCase/:keyword', function (request, response, next) {
+function sortACaseReplace(sortACase) {
+    let order = ` ORDER BY rvw_date DESC`; // 최근 순
+    if (sortACase == 1) { // 오래된 순
+        order = ` ORDER BY rvw_date`;
+    }
+    return order;
+}
 
-    const sortCase = request.params.sortCase;
+router.get('/review/:sortNCase/:keyword', function (request, response, next) {
+
+    const sortNCase = request.params.sortNCase;
     const keyword = request.params.keyword;
     
     let search = '';
@@ -29,9 +37,9 @@ router.get('/review/:sortCase/:keyword', function (request, response, next) {
         search = ' WHERE doc_id Like "%' + keyword + '%" ';
     }
 
-    const arrange = sortCaseReplace(sortCase);
+    const narrange = sortNCaseReplace(sortNCase);
 
-    db.query(sql.reviewdoclist + search + arrange, function (error, results, fields) {
+    db.query(sql.reviewdoclist + search + narrange, function (error, results, fields) {
         if (error) {
             console.error(error);
             return response.status(500).json({ error: '의사리스트에러' });
@@ -55,9 +63,9 @@ router.post('/reviewdetail', (request, response) => {
     });
 });
 
-router.get('/admin/reviewlist/:sortCase/:keyword', function (request, response, next) {
+router.get('/admin/reviewlist/:sortACase/:keyword', function (request, response, next) {
 
-    const sortCase = request.params.sortCase;
+    const sortACase = request.params.sortACase;
     const keyword = request.params.keyword;
     
     let search = '';
@@ -66,9 +74,9 @@ router.get('/admin/reviewlist/:sortCase/:keyword', function (request, response, 
         search = ' WHERE doc_id Like "%' + keyword + '%" ';
     }
 
-    const arrange = sortCaseReplace(sortCase);
+    const aarrange = sortACaseReplace(sortACase);
 
-    db.query(sql.reviewdoclist + search + arrange, function (error, results, fields) {
+    db.query(sql.reviewdoclist + search + aarrange, function (error, results, fields) {
         if (error) {
             console.error(error);
             return response.status(500).json({ error: '의사리스트에러' });
@@ -86,6 +94,21 @@ router.delete('/admin/reviewlist/:rvw_no', function (request, response, next) {
             return response.status(500).json({ error: '진료기록삭제에러' });
         }
         return response.status(200).json({ message: '진료기록삭제성공' });
+    });
+});
+
+router.post('/admin/reviewdetail', (request, response) => {
+    const reviewNo = request.body.rvw_no;
+
+    db.query(sql.reviewdetail, [reviewNo], function (error, results) {
+        if (error) {
+            console.error(error);
+            return response.status(500).json({ error: '내용로드에러' });
+        }
+        else {
+            db.query(sql.reviewhit, [reviewNo])
+        }
+        response.json(results);
     });
 });
 

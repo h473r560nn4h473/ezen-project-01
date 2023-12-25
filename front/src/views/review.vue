@@ -9,26 +9,26 @@
                         <h2>진료기록 관리</h2>
                         <div class="search_bar">
                             <input v-model="keyword" class="form-control me-2" type="text" placeholder="의사 아이디 검색"
-                                @keyup.enter="getNReviewList(sortCase)">
-                            <button class="btn btn-secondary" type="submit" @click="getNReviewList(sortCase)"><i class="fa fa-search"></i></button>
+                                @keyup.enter="getNReviewList(sortNCase)">
+                            <button class="btn btn-secondary" type="submit" @click="getNReviewList(sortNCase)"><i class="fa fa-search"></i></button>
                         </div>
                         <div class="dropdown">
                             <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1"
-                                data-bs-toggle="dropdown" aria-expanded="false" style="border: none;"> {{ sortCase }}
+                                data-bs-toggle="dropdown" aria-expanded="false" style="border: none;"> {{ sortNCase }}
                             </button>
                             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                <li><a class="dropdown-item" href="#" @click="sortList(0)">오래된 순</a></li>
-                                <li><a class="dropdown-item" href="#" @click="sortList(1)">최근 순</a></li>
-                                <li><a class="dropdown-item" href="#" @click="sortList(2)">조회수 낮은 순</a></li>
-                                <li><a class="dropdown-item" href="#" @click="sortList(3)">조회수 높은 순</a></li>
+                                <li><a class="dropdown-item" href="#" @click="sortList(0)">최근 순</a></li>
+                                <li><a class="dropdown-item" href="#" @click="sortList(1)">오래된 순</a></li>
+                                <li><a class="dropdown-item" href="#" @click="sortList(2)">조회수 높은 순</a></li>
+                                <li><a class="dropdown-item" href="#" @click="sortList(3)">조회수 낮은 순</a></li>
                             </ul>
                         </div>
                     </div>
                 </caption>
                 <thead class="table-light">
                     <tr>
-                        <th scope="col">번호</th>
-                        <th scope="col">등록번호</th>
+                        <th scope="col" style="display: none;">번호</th>
+                        <!-- <th scope="col">등록번호</th> -->
                         <th scope="col">동물등록번호</th>
                         <th scope="col">의사 아이디</th>
                         <th scope="col">진료명</th>
@@ -38,8 +38,8 @@
                 </thead>
                 <tbody>
                     <tr v-for="(review, i) in pageReviewList" :key="i" @click="movetonreview(review.rvw_no)">
-                        <th scope="row">{{ pageNum * onePageCnt + i + 1 }}</th>
-                        <td>{{ review.rvw_no }}</td>
+                        <th scope="row" style="display: none;">{{ pageNum * onePageCnt + i + 1 }}</th>
+                        <!-- <td>{{ review.rvw_no }}</td> -->
                         <td>{{ review.pet_no }}</td>
                         <td>{{ review.doc_id }}</td>
                         <td>{{ review.rvw_title }}</td>
@@ -69,7 +69,7 @@ export default {
     data() {
         return {
             nreviewList: [],
-            sortCase: "최근 순",
+            sortNCase: "최근 순",
             keyword: '',
             pageReviewList: [],  // 한 페이지에 보여줄 굿즈 리스트를 잘라 담을 새 리스트
             pageNum: 0,
@@ -95,14 +95,14 @@ export default {
             const start = 0 + this.pageNum * this.onePageCnt
             this.pageReviewList = this.nreviewList.slice(start, start + this.onePageCnt);
         },
-        async getNReviewList(sortCaseNum) {
+        async getNReviewList(sortNCaseNum) {
             let keyword = 'none'
 
             if (this.keyword != '') {
                 keyword = this.keyword;
             }
             try {
-                const response = await axios.get(`http://localhost:3000/review/review/${sortCaseNum}/${keyword}`);
+                const response = await axios.get(`http://localhost:3000/review/review/${sortNCaseNum}/${keyword}`);
                 this.nreviewList = response.data;
                 this.pageCnt = Math.ceil(this.nreviewList.length / this.onePageCnt)
                 this.setPage(1)
@@ -113,15 +113,15 @@ export default {
         },
         sortList(sortNum) {
             if (sortNum == 0) {
-                this.sortCase = "오래된 순"
+                this.sortNCase = "최근 순"
             } else if (sortNum == 1) {
-                this.sortCase = "최근 순"
+                this.sortNCase = "오래된 순"
             }
             else if (sortNum == 2) {
-                this.sortCase = "조회수 낮은 순"
+                this.sortNCase = "조회수 높은 순"
             }
             else if (sortNum == 3) {
-                this.sortCase = "조회수 높은 순"
+                this.sortNCase = "조회수 낮은 순"
             }
             this.getNReviewList(sortNum)
                 .then(() => {

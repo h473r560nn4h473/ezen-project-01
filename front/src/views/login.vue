@@ -66,7 +66,7 @@ export default {
                             showConfirmButton: false,
                             timer: 1000
                         })
-                        this.$router.push({ path: '/joincond' });  // 메인 화면으로 이동
+                        this.$router.push({ path: '/' });  // 메인 화면으로 이동
                     }
                 })
                 .catch(err => {

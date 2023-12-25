@@ -24,6 +24,7 @@ import UserInfo from './admin/userInfo.vue'
 import ReviewList from './admin/review.vue'
 import Qna from './admin/qna.vue'
 import ReservationList from './admin/reservation.vue'
+import aReviewDetailPage from './admin/reviewdetail.vue'
 
 const routes = [
     {
@@ -77,6 +78,10 @@ const routes = [
             {
                 path: 'reservationlist',
                 component: ReservationList,
+            },
+            {
+                path: 'reviewlist/reviewdetail/',
+                component: aReviewDetailPage,
             },
         ]
     },

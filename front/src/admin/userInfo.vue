@@ -19,8 +19,8 @@
                     data-bs-toggle="dropdown" aria-expanded="false" style="border: none;"> {{ sortCase }}
                   </button>
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                      <li><a class="dropdown-item" href="#" @click="sortList(0)">오래된 순</a></li>
-                      <li><a class="dropdown-item" href="#" @click="sortList(1)">최근 순</a></li>
+                      <li><a class="dropdown-item" href="#" @click="sortList(0)">최근 가입 순</a></li>
+                      <li><a class="dropdown-item" href="#" @click="sortList(1)">오래된 가입 순</a></li>
                     </ul>
                 </div>
               </div>
@@ -29,6 +29,7 @@
         </caption>
         <thead class="table-light">
           <tr>
+            <th scope="col" style="display: none;">번호</th>
             <th scope="col">번호</th>
             <th scope="col">아이디</th>
             <th scope="col">이름</th>
@@ -40,7 +41,8 @@
         </thead>
         <tbody>
           <tr v-for="(user, i) in pageUserList" :key="i">
-            <th scope="row">{{ pageNum * onePageCnt + i + 1 }}</th>
+            <th scope="row" style="display: none;">{{ pageNum * onePageCnt + i + 1 }}</th>
+            <td>{{ user.user_no }}</td>
             <td>{{ formatLongID(user.user_id) }}</td>
             <td>{{ user.user_nm }}</td>
             <td>{{ user.user_ph }}</td>
@@ -121,7 +123,7 @@ export default {
     return {
       userList: [],
       pet: [],
-      sortCase: "최근 순",
+      sortCase: "최근 가입 순",
       keyword: '',
       pageUserList: [],
       pageNum: 0,
@@ -191,9 +193,9 @@ export default {
     },
     sortList(sortNum) {
       if (sortNum == 0) {
-        this.sortCase = "오래된 순"
-      } else {
-        this.sortCase = "최근 순"
+        this.sortCase = "최근 가입 순"
+      } else if (sortNum == 1) {
+        this.sortCase = "오래된 가입 순"
       }
       this.getUserList(sortNum)
         .then(() => {

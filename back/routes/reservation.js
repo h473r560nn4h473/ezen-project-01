@@ -5,9 +5,15 @@ const sql = require('../sql.js');
 const bcrypt = require('bcrypt');
 
 function sortCaseReplace(sortCase) {
-    let order = ` ORDER BY res_date, res_time`; // 오래된 순
-    if (sortCase == 1) { // 최근 순
+    let order = ` ORDER BY res_no DESC`; // 최근 예약 순
+    if (sortCase == 1) { // 오래된 예약 순
+        order = ` ORDER BY res_no`;
+    }
+    if (sortCase == 2) { // 최근 예약일 순
         order = ` ORDER BY res_date DESC, res_time DESC`;
+    }
+    if (sortCase == 3) { // 오래된 예약일 순
+        order = ` ORDER BY res_date, res_time`;
     }
     return order;
 }

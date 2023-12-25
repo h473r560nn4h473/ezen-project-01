@@ -18,8 +18,8 @@
                                     data-bs-toggle="dropdown" aria-expanded="false" style="border: none;"> {{ sortCase }}
                                 </button>
                                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                    <li><a class="dropdown-item" href="#" @click="sortList(0)">오래된 순</a></li>
-                                    <li><a class="dropdown-item" href="#" @click="sortList(1)">최근 순</a></li>
+                                    <li><a class="dropdown-item" href="#" @click="sortList(0)">최근 순</a></li>
+                                    <li><a class="dropdown-item" href="#" @click="sortList(1)">오래된 순</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -27,7 +27,7 @@
                 </caption>
                 <thead class="table-light">
                     <tr>
-                        <th scope="col">번호</th>
+                        <th scope="col" style="display: none;">번호</th>
                         <th scope="col">회원번호</th>
                         <th scope="col">글 제목</th>
                         <th scope="col">작성일</th>
@@ -38,7 +38,7 @@
                 </thead>
                 <tbody>
                     <tr v-for="(qna, i) in pageQnaList" :key="i">
-                        <th scope="row">{{ pageNum * onePageCnt + i + 1 }}</th>
+                        <th scope="row" style="display: none;">{{ pageNum * onePageCnt + i + 1 }}</th>
                         <td>{{ qna.user_no }}</td>
                         <td>{{ qna.qna_title }}</td>
                         <td>{{ formatDateTime(qna.qna_date) }}</td>
@@ -135,9 +135,9 @@ export default {
         },
         sortList(sortNum) {
             if (sortNum == 0) {
-                this.sortCase = "오래된 순"
-            } else {
                 this.sortCase = "최근 순"
+            } else if (sortNum == 1) {
+                this.sortCase = "오래된 순"
             }
             this.getQnaList(sortNum)
                 .then(() => {

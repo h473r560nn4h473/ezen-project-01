@@ -85,9 +85,9 @@ router.post('/admin_check', function (request, response) {
 })
 
 function sortCaseReplace(sortCase) {
-    let order = ` ORDER BY user_no`; // 오래된 순
-    if (sortCase == 1) { // 최근 순
-        order = ` ORDER BY user_no DESC`;
+    let order = ` ORDER BY user_no DESC`; // 최근 가입 순
+    if (sortCase == 1) { // 오래된 가입 순
+        order = ` ORDER BY user_no`;
     }
     return order;
 }

@@ -24,7 +24,7 @@
                 <p>예약 관리</p>
             </router-link>
             <br />
-            <button type="button" class="btn" @click="logout">로그아웃</button>
+            <button type="button" class="big_red_btn" @click="logout">로그아웃</button>
         </div>
     </div>
 </template>
@@ -54,6 +54,17 @@ export default {
 }
 </script>
 <style>
+
+.big_red_btn {
+	font-size: 14px;
+	width: 80px;
+	height: 50px;
+	background-color: red;
+	border: none;
+	border-radius: 4px;
+	margin: 0 auto;
+    display:block;
+}
 
 .admin-bar p {
     margin: auto;

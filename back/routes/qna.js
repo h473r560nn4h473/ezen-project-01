@@ -5,9 +5,9 @@ const sql = require('../sql.js');
 const bcrypt = require('bcrypt');
 
 function sortCaseReplace(sortCase) {
-    let order = ` ORDER BY qna_date`; // 오래된 순
-    if (sortCase == 1) { // 최근 순
-        order = ` ORDER BY qna_date DESC`;
+    let order = ` ORDER BY qna_date DESC`; // 최근 순
+    if (sortCase == 1) { // 오래된 순
+        order = ` ORDER BY qna_date`;
     }
     return order;
 }

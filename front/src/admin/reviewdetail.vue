@@ -18,7 +18,7 @@
 
 				</div>
 				<div class="btn_area">
-					<button type="button" class="main_btn" @click="NReviewMain">목록으로</button>
+					<button type="button" class="main_btn" @click="AReviewMain">목록으로</button>
 				</div>
 			</div>
 		</form>
@@ -49,10 +49,10 @@ export default {
 		});
 	},
 	methods: {
-		NReviewMain() {
-			console.log("일반유저페이지")
-			this.$router.push('/review');
-		}
+		AReviewMain() {
+			console.log("관리자페이지")
+			this.$router.push('/admin/reviewlist');
+		},
 	}
 }
 </script>
