@@ -9,12 +9,12 @@
 					<div class=t2>제목
 					</div>
 					<textarea class="text2" v-model="reviewdetail[0].RVW_TITLE"
-						style="font-size: 17px;"></textarea>
+						style="font-size: 17px;" readonly></textarea>
 
 					<div class="t2">내용</div>
 					<div></div>
 					<textarea class="text1" v-model="reviewdetail[0].RVW_CONTENT"
-						style="font-size: 17px;"></textarea>
+						style="font-size: 17px;" readonly></textarea>
 
 				</div>
 				<div class="btn_area">
