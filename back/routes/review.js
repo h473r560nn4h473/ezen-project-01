@@ -105,9 +105,6 @@ router.post('/admin/reviewdetail', (request, response) => {
             console.error(error);
             return response.status(500).json({ error: '내용로드에러' });
         }
-        else {
-            db.query(sql.reviewhit, [reviewNo])
-        }
         response.json(results);
     });
 });
