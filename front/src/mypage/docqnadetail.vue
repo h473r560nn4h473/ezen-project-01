@@ -1,26 +1,26 @@
 <template>
 	<div>
 		<form>
-			<div class="review" v-for="review in reviewdetail" :key="review.rvw_no">
+			<div class="qna" v-for="qna in qnadetail" :key="qna.qna_no">
 				<div>
 					<div class="t2 middle">
-						<span style="font-size: 18px; font-style: bold;">담당의&nbsp;&nbsp;{{ reviewdetail[0].DOC_NM }}</span>
-						<img class="pet_face" :src="getPetImg()">
+						<span style="font-size: 18px; font-style: bold;">작성자&nbsp;&nbsp;{{ qnadetail[0].USER_NO }}</span>
+						<!-- <img class="pet_face" :src="getPetImg()"> -->
 					</div>
 
 					<div class=t2>제목
 					</div>
-					<textarea class="text2" v-model="reviewdetail[0].RVW_TITLE"
+					<textarea class="text2" v-model="qnadetail[0].QNA_TITLE"
 						style="font-size: 17px;"></textarea>
 
 					<div class="t2">내용</div>
 					<div></div>
-					<textarea class="text1" v-model="reviewdetail[0].RVW_CONTENT"
+					<textarea class="text1" v-model="qnadetail[0].QNA_CONTENT"
 						style="font-size: 17px;"></textarea>
 
 				</div>
 				<div class="btn_area">
-					<button type="button" class="main_btn" @click="AReviewMain">목록으로</button>
+					<button type="button" class="main_btn" @click="DQnaMain">목록으로</button>
 				</div>
 			</div>
 		</form>
@@ -33,31 +33,31 @@ import axios from 'axios';
 export default {
 	data() {
 		return {
-			reviewdetail: [],
+			qnadetail: [],
 		};
 	},
 	mounted() {
 		axios({
-			url: "http://localhost:3000/review/reviewdetail",
+			url: "http://localhost:3000/mypage/mypage/docqna/detail",
 			method: "POST",
 			data: {
-				rvw_no: this.$route.query.rvw_no
+				qna_no: this.$route.query.qna_no
 			},
 		}).then(response => {
 			console.log(response.data);
-			this.reviewdetail = response.data;
+			this.qnadetail = response.data;
 		}).catch(error => {
 			alert(error);
 		});
 	},
 	methods: {
-		AReviewMain() {
-			console.log("관리자페이지")
-			this.$router.push('/admin/reviewlist');
+		DQnaMain() {
+			console.log("의료진문의목록관리페이지")
+			this.$router.push('/mypage/docqna');
 		},
 		getPetImg() {
-			if (this.reviewdetail[0].PET_IMG) {
-				return require('../../../back/uploads/uploadPet/' + this.reviewdetail[0].PET_IMG);
+			if (this.qnadetail[0].PET_IMG) {
+				return require('../../../back/uploads/uploadPet/' + this.qnadetail[0].PET_IMG);
 			} else {
 				return require('../assets/imgempty.png');
 			}
@@ -82,13 +82,13 @@ export default {
 	justify-content: flex-start;
 }
 
-.review {
+.qna {
 	margin: auto;
 	padding: 30px;
 	max-width: 900px;
 }
 
-.review textarea {
+.qna textarea {
 	width: 100%;
 }
 

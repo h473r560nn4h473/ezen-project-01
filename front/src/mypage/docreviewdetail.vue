@@ -20,7 +20,7 @@
 
 				</div>
 				<div class="btn_area">
-					<button type="button" class="main_btn" @click="AReviewMain">목록으로</button>
+					<button type="button" class="main_btn" @click="DReviewMain">목록으로</button>
 				</div>
 			</div>
 		</form>
@@ -38,7 +38,7 @@ export default {
 	},
 	mounted() {
 		axios({
-			url: "http://localhost:3000/review/reviewdetail",
+			url: "http://localhost:3000/mypage/mypage/docreview/detail",
 			method: "POST",
 			data: {
 				rvw_no: this.$route.query.rvw_no
@@ -51,9 +51,9 @@ export default {
 		});
 	},
 	methods: {
-		AReviewMain() {
-			console.log("관리자페이지")
-			this.$router.push('/admin/reviewlist');
+		DReviewMain() {
+			console.log("의료진진료기록관리페이지")
+			this.$router.push('/mypage/docreview');
 		},
 		getPetImg() {
 			if (this.reviewdetail[0].PET_IMG) {

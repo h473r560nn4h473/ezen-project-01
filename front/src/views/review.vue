@@ -8,7 +8,7 @@
                     <div class="list-title">
                         <h2>진료기록 관리</h2>
                         <div class="search_bar">
-                            <input v-model="keyword" class="form-control me-2" type="text" placeholder="의사 아이디 검색"
+                            <input v-model="keyword" class="form-control me-2" type="text" placeholder="담당의 검색"
                                 @keyup.enter="getNReviewList(sortNCase)">
                             <button class="btn btn-secondary" type="submit" @click="getNReviewList(sortNCase)"><i class="fa fa-search"></i></button>
                         </div>
@@ -28,23 +28,21 @@
                 <thead class="table-light">
                     <tr>
                         <th scope="col" style="display: none;">번호</th>
-                        <!-- <th scope="col">등록번호</th> -->
                         <th scope="col">동물등록번호</th>
-                        <th scope="col">의사 아이디</th>
+                        <th scope="col">담당의</th>
                         <th scope="col">진료명</th>
                         <th scope="col">작성일</th>
                         <th scope="col">조회수</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="(review, i) in pageReviewList" :key="i" @click="movetonreview(review.rvw_no)">
+                    <tr v-for="(review, i) in pageReviewList" :key="i" @click="movetonreview(review.RVW_NO)">
                         <th scope="row" style="display: none;">{{ pageNum * onePageCnt + i + 1 }}</th>
-                        <!-- <td>{{ review.rvw_no }}</td> -->
-                        <td>{{ review.pet_no }}</td>
-                        <td>{{ review.doc_id }}</td>
-                        <td>{{ review.rvw_title }}</td>
-                        <td>{{ formatDateTime(review.rvw_date) }}</td>
-                        <td>{{ review.rvw_count }}</td>
+                        <td>{{ review.PET_NO }}</td>
+                        <td>{{ review.DOC_NM }}</td>
+                        <td>{{ review.RVW_TITLE }}</td>
+                        <td>{{ formatDateTime(review.RVW_DATE) }}</td>
+                        <td>{{ review.RVW_COUNT }}</td>
                     </tr>
                 </tbody>
             </table>
@@ -133,8 +131,8 @@ export default {
             const formattedDateTime = date.toLocaleString('ko-KR');
             return formattedDateTime;
         },
-        movetonreview(rvw_no) {
-            window.location.href = window.location.pathname + '/reviewdetail?rvw_no=' + rvw_no;
+        movetonreview(RVW_NO) {
+            window.location.href = window.location.pathname + '/reviewdetail?rvw_no=' + RVW_NO;
         },
     }
 };

@@ -23,6 +23,12 @@ function sortACaseReplace(sortACase) {
     if (sortACase == 1) { // 오래된 순
         order = ` ORDER BY rvw_date`;
     }
+    if (sortACase == 2) { // 조회수 높은 순
+        order = ` ORDER BY rvw_count DESC`;
+    }
+    if (sortACase == 3) { // 조회수 낮은 순
+        order = ` ORDER BY rvw_count`;
+    }
     return order;
 }
 
@@ -34,7 +40,7 @@ router.get('/review/:sortNCase/:keyword', function (request, response, next) {
     let search = '';
 
     if (keyword != 'none') {
-        search = ' WHERE doc_id Like "%' + keyword + '%" ';
+        search = ' WHERE DOC_NM Like "%' + keyword + '%" ';
     }
 
     const narrange = sortNCaseReplace(sortNCase);
@@ -71,7 +77,7 @@ router.get('/admin/reviewlist/:sortACase/:keyword', function (request, response,
     let search = '';
 
     if (keyword != 'none') {
-        search = ' WHERE doc_id Like "%' + keyword + '%" ';
+        search = ' WHERE DOC_NM Like "%' + keyword + '%" ';
     }
 
     const aarrange = sortACaseReplace(sortACase);
@@ -107,6 +113,18 @@ router.post('/admin/reviewdetail', (request, response) => {
         }
         response.json(results);
     });
+});
+
+router.post('/admin/reviewdetail/reviewedit', (request, response) => {
+    const aReviewEdit = request.body;
+    db.query(sql.reviewEdit, [aReviewEdit.title, aReviewEdit.content, aReviewEdit.number], function (error, result) {
+        if (error) {
+            console.error(error);
+            return response.status(500).json({ error: 'error' });
+        } else {
+            response.send(result);
+        }
+    })
 });
 
 module.exports = router;

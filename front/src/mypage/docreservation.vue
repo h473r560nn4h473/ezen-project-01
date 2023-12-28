@@ -6,11 +6,11 @@
             <table class="table caption-top qnalist-table">
                 <caption>
                     <div class="list-title">
-                        <h2>예약 관리</h2>
+                        <h2>예약 목록</h2>
                         <div class="search_bar">
-                            <input v-model="keyword" class="form-control me-2" type="text" placeholder="담당의 검색"
-                                @keyup.enter="getReservationList(sortCase)">
-                            <button class="btn btn-secondary" type="submit" @click="getReservationList(sortCase)"><i class="fa fa-search"></i></button>
+                            <input v-model="keyword" class="form-control me-2" type="text" placeholder="회원명 검색"
+                                @keyup.enter="getdocReservationList(sortCase)">
+                            <button class="btn btn-secondary" type="submit" @click="getdocReservationList(sortCase)"><i class="fa fa-search"></i></button>
                         </div>
                         <div class="list-title2">
                             <div class="dropdown">
@@ -31,26 +31,24 @@
                     <tr>
                         <th scope="col" style="display: none;">번호</th>
                         <th scope="col">예약번호</th>
-                        <!-- <th scope="col">동물등록번호</th> -->
                         <th scope="col">예약자명</th>
                         <th scope="col">제목</th>
+                        <th scope="col">내용</th>
                         <th scope="col">예약시간</th>
                         <th scope="col">담당의</th>
-                        <!-- <th scope="col">예약내용</th> -->
                         <th scope="col"> </th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="(reservation, i) in pageReservationList" :key="i">
+                    <tr v-for="(docreservation, i) in pagedocReservationList" :key="i">
                         <th scope="row" style="display: none;">{{ pageNum * onePageCnt + i + 1 }}</th>
-                        <td>{{ reservation.RES_NO }}</td>
-                        <!-- <td>{{ reservation.pet_no }}</td> -->
-                        <td>{{ reservation.USER_NM }}</td>
-                        <td>{{ reservation.RES_TITLE }}</td>
-                        <td>{{ formatDate(reservation.RES_DATE) }} {{ reservation.RES_TIME }}</td>
-                        <td>{{ reservation.DOC_NM }}</td>
-                        <!-- <td>{{ reservation.res_content }}</td> -->
-                        <td><button class="btn btn-outline-danger" @click="confirmDeleteReservation(reservation)">삭제</button></td>
+                        <td>{{ docreservation.RES_NO }}</td>
+                        <td>{{ docreservation.USER_NM }}</td>
+                        <td>{{ docreservation.RES_TITLE }}</td>
+                        <td>{{ docreservation.RES_CONTENT }}</td>
+                        <td>{{ formatDate(docreservation.RES_DATE) }} {{ docreservation.RES_TIME }}</td>
+                        <td>{{ docreservation.DOC_NM }}</td>
+                        <td><button class="btn btn-outline-danger" @click="confirmDeletedocReservation(docreservation)">취소</button></td>
                     </tr>
                 </tbody>
             </table>
@@ -74,10 +72,10 @@ import axios from 'axios';
 export default {
     data() {
         return {
-            reservationList: [],
+            docreservationList: [],
             sortCase: "최근 예약번호 순",
             keyword: '',
-            pageReservationList: [],  // 한 페이지에 보여줄 굿즈 리스트를 잘라 담을 새 리스트
+            pagedocReservationList: [],
             pageNum: 0,
             pageCnt: 0,
             onePageCnt: 10,
@@ -89,52 +87,31 @@ export default {
         },
     },
     mounted() {
-        if (this.user.user_no == '') {
-            // 일단은 로그인 상태 체크 
-            this.$swal("관리자 외 접근제한 페이지입니다.");
-            this.$router.push({ path: '/login' });
-        } else {
-            axios({
-                url: "http://localhost:3000/auth/admin_check",
-                method: "POST",
-                data: {
-                    user_no: this.user.user_no,
-                },
-            }).then(res => {
-                if (res.data.message == 'user') {
-                    this.$swal("관리자 외 접근제한 페이지입니다.");
-                    this.$router.push({ path: '/' });
-                }
-            }).catch(() => {
-                this.$swal("접속 오류");
-            });
-        }
     },
     created() {
-        this.getReservationList();
+        this.getdocReservationList();
     },
     methods: {
         setPage(page) {
-            this.pageReservationList = []
+            this.pagedocReservationList = []
             this.pageNum = page - 1;
             this.sliceList()
         },
         sliceList() {
             const start = 0 + this.pageNum * this.onePageCnt
-            this.pageReservationList = this.reservationList.slice(start, start + this.onePageCnt);
+            this.pagedocReservationList = this.docreservationList.slice(start, start + this.onePageCnt);
         },
-        async getReservationList(sortCaseNum) {
-            let keyword = 'none'
-
+        async getdocReservationList(sortCaseNum) {
+            let keyword = 'none';
             if (this.keyword != '') {
                 keyword = this.keyword;
             }
             try {
-                const response = await axios.get(`http://localhost:3000/reservation/admin/reservationlist/${sortCaseNum}/${keyword}`);
-                this.reservationList = response.data;
-                this.pageCnt = Math.ceil(this.reservationList.length / this.onePageCnt)
-                this.setPage(1)
-
+                const response = await axios.get(`http://localhost:3000/mypage/mypage/docreservation/${this.user.user_id}/${sortCaseNum}/${keyword}`);
+                this.docreservationList = response.data;
+                this.pageCnt = Math.ceil(this.docreservationList.length / this.onePageCnt);
+                console.log(this.docreservationList);
+                this.setPage(1);
             } catch (error) {
                 console.error(error);
             }
@@ -149,9 +126,9 @@ export default {
             } else if (sortNum == 3) {
                 this.sortCase = "오래된 예약시간 순"
             }
-            this.getReservationList(sortNum)
+            this.getdocReservationList(sortNum)
                 .then(() => {
-                    this.$router.push({ path: '/admin/reservationList' });
+                    this.$router.push({ path: '/mypage/docreservation/' });
                 })
         },
         formatDate(dateTime) {
@@ -159,9 +136,9 @@ export default {
             const formattedDate = date.toLocaleDateString('ko-KR'); // 날짜만 표시
             return formattedDate;
         },
-        confirmDeleteReservation(reservation) {
+        confirmDeletedocReservation(docreservation) {
             this.$swal({
-                title: `문의내역을 삭제하시겠습니까?`,
+                title: `예약내역을 삭제하시겠습니까?`,
                 icon: 'question',
                 showCancelButton: true,
                 confirmButtonText: '삭제',
@@ -169,13 +146,13 @@ export default {
                 reverseButtons: true
             }).then(result => {
                 if (result.value) {
-                    this.deleteReservation(reservation);
+                    this.deletedocReservation(docreservation);
                     this.$swal({
                         position: 'top',
                         icon: 'success',
                         title: '삭제되었습니다',
                         showConfirmButton: false,
-                        timer: 1500
+                        timer: 1000
                     })
                     .then(() => {
                         this.$router.go(this.$router.currentRoute);
@@ -184,14 +161,14 @@ export default {
                 }
             });
         },
-        async deleteReservation(reservation) {
-            console.log('삭제 버튼 클릭 - 문의내역:', reservation);
+        async deletedocReservation(docreservation) {
+            console.log('삭제 버튼 클릭 - 예약내역:', docreservation);
             try {
-                const response = await axios.delete(`http://localhost:3000/reservation/admin/reservationlist/${reservation.res_no}`);
-                console.log('진료기록 삭제 성공:', response.data);
-                this.reservationList = this.reservationList.filter(re => re.res_no !== reservation.res_no);
+                const response = await axios.delete(`http://localhost:3000/mypage/mypage/docreservation/${this.user.user_id}/${docreservation.RES_NO}`);
+                console.log('예약내역 삭제 성공:', response.data);
+                this.docreservationList = this.docreservationList.filter(re => re.RES_NO !== docreservation.RES_NO);
             } catch (error) {
-                console.error('진료기록 삭제 실패:', error);
+                console.error('예약내역 삭제 실패:', error);
             }
         },
     }

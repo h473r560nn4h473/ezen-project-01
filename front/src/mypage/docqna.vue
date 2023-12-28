@@ -6,22 +6,20 @@
             <table class="table caption-top qnalist-table">
                 <caption>
                     <div class="list-title">
-                        <h2>예약 관리</h2>
+                        <h2>문의사항 관리</h2>
                         <div class="search_bar">
-                            <input v-model="keyword" class="form-control me-2" type="text" placeholder="담당의 검색"
-                                @keyup.enter="getReservationList(sortCase)">
-                            <button class="btn btn-secondary" type="submit" @click="getReservationList(sortCase)"><i class="fa fa-search"></i></button>
+                            <input v-model="keyword" class="form-control me-2" type="text" placeholder="회원명 검색"
+                                @keyup.enter="getQnaList(sortQCase)">
+                            <button class="btn btn-secondary" type="submit" @click="getQnaList(sortQCase)"><i class="fa fa-search"></i></button>
                         </div>
                         <div class="list-title2">
                             <div class="dropdown">
                                 <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1"
-                                    data-bs-toggle="dropdown" aria-expanded="false" style="border: none;"> {{ sortCase }}
+                                    data-bs-toggle="dropdown" aria-expanded="false" style="border: none;"> {{ sortQCase }}
                                 </button>
                                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                    <li><a class="dropdown-item" href="#" @click="sortList(0)">최근 예약번호 순</a></li>
-                                    <li><a class="dropdown-item" href="#" @click="sortList(1)">오래된 예약번호 순</a></li>
-                                    <li><a class="dropdown-item" href="#" @click="sortList(2)">최근 예약시간 순</a></li>
-                                    <li><a class="dropdown-item" href="#" @click="sortList(3)">오래된 예약시간 순</a></li>
+                                    <li><a class="dropdown-item" href="#" @click="sortList(0)">최근 순</a></li>
+                                    <li><a class="dropdown-item" href="#" @click="sortList(1)">오래된 순</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -30,27 +28,25 @@
                 <thead class="table-light">
                     <tr>
                         <th scope="col" style="display: none;">번호</th>
-                        <th scope="col">예약번호</th>
-                        <!-- <th scope="col">동물등록번호</th> -->
-                        <th scope="col">예약자명</th>
-                        <th scope="col">제목</th>
-                        <th scope="col">예약시간</th>
+                        <th scope="col">회원번호</th>
+                        <th scope="col">회원명</th>
+                        <th scope="col">글 제목</th>
+                        <th scope="col">작성일</th>
                         <th scope="col">담당의</th>
-                        <!-- <th scope="col">예약내용</th> -->
+                        <th scope="col">답변 상태</th>
                         <th scope="col"> </th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="(reservation, i) in pageReservationList" :key="i">
+                    <tr v-for="(qna, i) in pageQnaList" :key="i">
                         <th scope="row" style="display: none;">{{ pageNum * onePageCnt + i + 1 }}</th>
-                        <td>{{ reservation.RES_NO }}</td>
-                        <!-- <td>{{ reservation.pet_no }}</td> -->
-                        <td>{{ reservation.USER_NM }}</td>
-                        <td>{{ reservation.RES_TITLE }}</td>
-                        <td>{{ formatDate(reservation.RES_DATE) }} {{ reservation.RES_TIME }}</td>
-                        <td>{{ reservation.DOC_NM }}</td>
-                        <!-- <td>{{ reservation.res_content }}</td> -->
-                        <td><button class="btn btn-outline-danger" @click="confirmDeleteReservation(reservation)">삭제</button></td>
+                        <td @click="movetodqna(qna.QNA_NO)">{{ qna.USER_NO }}</td>
+                        <td @click="movetodqna(qna.QNA_NO)">{{ qna.USER_NM }}</td>
+                        <td @click="movetodqna(qna.QNA_NO)">{{ qna.QNA_TITLE }}</td>
+                        <td @click="movetodqna(qna.QNA_NO)">{{ formatDateTime(qna.QNA_DATE) }}</td>
+                        <td @click="movetodqna(qna.QNA_NO)">{{ qna.DOC_NM }}</td>
+                        <td @click="movetodqna(qna.QNA_NO)">{{ getQnaState(qna) }}</td>
+                        <td><button class="btn btn-outline-danger" @click="confirmDeleteQna(qna)">삭제</button></td>
                     </tr>
                 </tbody>
             </table>
@@ -74,10 +70,10 @@ import axios from 'axios';
 export default {
     data() {
         return {
-            reservationList: [],
-            sortCase: "최근 예약번호 순",
+            qnaList: [],
+            sortQCase: "최근 순",
             keyword: '',
-            pageReservationList: [],  // 한 페이지에 보여줄 굿즈 리스트를 잘라 담을 새 리스트
+            pageQnaList: [],  // 한 페이지에 보여줄 굿즈 리스트를 잘라 담을 새 리스트
             pageNum: 0,
             pageCnt: 0,
             onePageCnt: 10,
@@ -89,50 +85,30 @@ export default {
         },
     },
     mounted() {
-        if (this.user.user_no == '') {
-            // 일단은 로그인 상태 체크 
-            this.$swal("관리자 외 접근제한 페이지입니다.");
-            this.$router.push({ path: '/login' });
-        } else {
-            axios({
-                url: "http://localhost:3000/auth/admin_check",
-                method: "POST",
-                data: {
-                    user_no: this.user.user_no,
-                },
-            }).then(res => {
-                if (res.data.message == 'user') {
-                    this.$swal("관리자 외 접근제한 페이지입니다.");
-                    this.$router.push({ path: '/' });
-                }
-            }).catch(() => {
-                this.$swal("접속 오류");
-            });
-        }
     },
     created() {
-        this.getReservationList();
+        this.getQnaList();
     },
     methods: {
         setPage(page) {
-            this.pageReservationList = []
+            this.pageQnaList = []
             this.pageNum = page - 1;
             this.sliceList()
         },
         sliceList() {
             const start = 0 + this.pageNum * this.onePageCnt
-            this.pageReservationList = this.reservationList.slice(start, start + this.onePageCnt);
+            this.pageQnaList = this.qnaList.slice(start, start + this.onePageCnt);
         },
-        async getReservationList(sortCaseNum) {
+        async getQnaList(sortQCaseNum) {
             let keyword = 'none'
 
             if (this.keyword != '') {
                 keyword = this.keyword;
             }
             try {
-                const response = await axios.get(`http://localhost:3000/reservation/admin/reservationlist/${sortCaseNum}/${keyword}`);
-                this.reservationList = response.data;
-                this.pageCnt = Math.ceil(this.reservationList.length / this.onePageCnt)
+                const response = await axios.get(`http://localhost:3000/mypage/mypage/docqna/${this.user.user_id}/${sortQCaseNum}/${keyword}`);
+                this.qnaList = response.data;
+                this.pageCnt = Math.ceil(this.qnaList.length / this.onePageCnt)
                 this.setPage(1)
 
             } catch (error) {
@@ -141,25 +117,28 @@ export default {
         },
         sortList(sortNum) {
             if (sortNum == 0) {
-                this.sortCase = "최근 예약번호 순"
+                this.sortCase = "최근 순"
             } else if (sortNum == 1) {
-                this.sortCase = "오래된 예약번호 순"
-            } else if (sortNum == 2) {
-                this.sortCase = "최근 예약시간 순"
-            } else if (sortNum == 3) {
-                this.sortCase = "오래된 예약시간 순"
+                this.sortCase = "오래된 순"
             }
-            this.getReservationList(sortNum)
+            this.getQnaList(sortNum)
                 .then(() => {
-                    this.$router.push({ path: '/admin/reservationList' });
+                    this.$router.push({ path: '/mypage/docqna' });
                 })
         },
-        formatDate(dateTime) {
+        formatDateTime(dateTime) {
             const date = new Date(dateTime);
-            const formattedDate = date.toLocaleDateString('ko-KR'); // 날짜만 표시
-            return formattedDate;
+            const formattedDateTime = date.toLocaleString('ko-KR');
+            return formattedDateTime;
         },
-        confirmDeleteReservation(reservation) {
+        getQnaState(qna) {
+            if (qna.QNA_ANSWER !== null && qna.QNA_STATE === 1) {
+                return '답변완료';
+            } else {
+                return '답변대기';
+            }
+        },
+        confirmDeleteQna(qna) {
             this.$swal({
                 title: `문의내역을 삭제하시겠습니까?`,
                 icon: 'question',
@@ -169,7 +148,7 @@ export default {
                 reverseButtons: true
             }).then(result => {
                 if (result.value) {
-                    this.deleteReservation(reservation);
+                    this.deleteQna(qna);
                     this.$swal({
                         position: 'top',
                         icon: 'success',
@@ -184,15 +163,18 @@ export default {
                 }
             });
         },
-        async deleteReservation(reservation) {
-            console.log('삭제 버튼 클릭 - 문의내역:', reservation);
+        async deleteQna(qna) {
+            console.log('삭제 버튼 클릭 - 문의내역:', qna);
             try {
-                const response = await axios.delete(`http://localhost:3000/reservation/admin/reservationlist/${reservation.res_no}`);
+                const response = await axios.delete(`http://localhost:3000/mypage/mypage/docqna/${this.user.user_id}/${qna.qna_no}`);
                 console.log('진료기록 삭제 성공:', response.data);
-                this.reservationList = this.reservationList.filter(re => re.res_no !== reservation.res_no);
+                this.qnaList = this.qnaList.filter(q => q.qna_no !== qna.qna_no);
             } catch (error) {
                 console.error('진료기록 삭제 실패:', error);
             }
+        },
+        movetodqna(QNA_NO) {
+            window.location.href = window.location.pathname + '/detail?qna_no=' + QNA_NO;
         },
     }
 };

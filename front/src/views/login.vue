@@ -20,6 +20,7 @@
                     <img :src="require(`../assets/btn_kakao.png`)" class="btn_kakao"/>
                     <img :src="require(`../assets/btn_naver.png`)" class="btn_naver"/> <!-- 로고 파일 크기를 카카오와 동일하게 축소함 -->
             </div>
+            <img src="../assets/btn_kakao.png" />
         </div>
     </main>
 </template>
@@ -79,11 +80,44 @@ export default {
 };
 </script>
 
+<!-- <script>
+export default {
+  data() {
+    return {
+      id: "",
+      pw: "",
+    };
+  },
+  methods: {
+    login() {
+      // Node.js API 호출
+      axios.post("/api/login", {
+        id: this.id,
+        pw: this.pw,
+      })
+      .then((response) => {
+        if (response.data === "user") {
+          alert("일반인 권한으로 로그인되었습니다.");
+        } else if (response.data === "doctor") {
+          alert("의사 권한으로 로그인되었습니다.");
+        } else if (response.data === "admin") {
+          alert("관리자 권한으로 로그인되었습니다.");
+        } else {
+          alert("로그인에 실패하였습니다.");
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+    },
+  },
+};
+</script> -->
+
 <style scoped>
 * {
     padding: 0;
     margin: 0;
-
 }
 
 .logo img {
@@ -144,10 +178,6 @@ input:focus {
     top: 30px;
 }
 
-.login-form .btn:hover {
-    cursor: pointer;
-}
-
 .login-form .btn_kakao {
     scale: 75%;
     position: relative;
@@ -160,13 +190,5 @@ input:focus {
     position: relative;
     left: 125px;
     top: 5px;
-}
-
-.login-form .btn_kakao:hover {
-    cursor: pointer;
-}
-
-.login-form .btn_naver:hover {
-    cursor: pointer;
 }
 </style>

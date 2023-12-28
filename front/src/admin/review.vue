@@ -8,7 +8,7 @@
                     <div class="list-title">
                         <h2>진료기록 관리</h2>
                         <div class="search_bar">
-                            <input v-model="keyword" class="form-control me-2" type="text" placeholder="의사 아이디 검색"
+                            <input v-model="keyword" class="form-control me-2" type="text" placeholder="담당의 검색"
                                 @keyup.enter="getReviewList(sortACase)">
                             <button class="btn btn-secondary" type="submit" @click="getReviewList(sortACase)"><i class="fa fa-search"></i></button>
                         </div>
@@ -20,6 +20,8 @@
                                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                                     <li><a class="dropdown-item" href="#" @click="sortList(0)">최근 순</a></li>
                                     <li><a class="dropdown-item" href="#" @click="sortList(1)">오래된 순</a></li>
+                                    <li><a class="dropdown-item" href="#" @click="sortList(2)">조회수 높은 순</a></li>
+                                    <li><a class="dropdown-item" href="#" @click="sortList(3)">조회수 낮은 순</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -29,28 +31,21 @@
                     <tr>
                         <th scope="col" style="display: none;">번호</th>
                         <th scope="col">동물등록번호</th>
-                        <th scope="col">의사 아이디</th>
+                        <th scope="col">담당의</th>
                         <th scope="col">진료명</th>
                         <th scope="col">작성일</th>
-                        <!-- <th scope="col">동물사진</th> -->
+                        <th scope="col">조회수</th>
                         <th scope="col"> </th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="(review, i) in pageReviewList" :key="i" @click="movetoareview(review.rvw_no)">
+                    <tr v-for="(review, i) in pageReviewList" :key="i">
                         <th scope="row" style="display: none;">{{ pageNum * onePageCnt + i + 1 }}</th>
-                        <td>{{ review.pet_no }}</td>
-                        <td>{{ review.doc_id }}</td>
-                        <td>{{ review.rvw_title }}</td>
-                        <td>{{ formatDateTime(review.rvw_date) }}</td>
-                        <!-- <td>
-                            <div v-if="pet.pet_img" class="col-md-4 pet-img" style="text-align : center;">
-                                <img :src="require(`../../../back/uploads/uploadPet/${pet.pet_img}`)" alt="..." style="border-radius:100%">
-                            </div>
-                            <div v-else class="col-md-4 pet-img" style="text-align : center;">
-                                <img :src="require(`../assets/imgempty.png`)" class="img-fluid rounded-start" alt="..." style="border-radius:100%">
-                            </div>
-                        </td> -->
+                        <td @click="movetoareview(review.RVW_NO)">{{ review.PET_NO }}</td>
+                        <td @click="movetoareview(review.RVW_NO)">{{ review.DOC_NM }}</td>
+                        <td @click="movetoareview(review.RVW_NO)">{{ review.RVW_TITLE }}</td>
+                        <td @click="movetoareview(review.RVW_NO)">{{ formatDateTime(review.RVW_DATE) }}</td>
+                        <td @click="movetoareview(review.RVW_NO)">{{ review.RVW_COUNT }}</td>
                         <td><button class="btn btn-outline-danger" @click="confirmDeleteReview(review)">삭제</button></td>
                     </tr>
                 </tbody>
@@ -143,9 +138,15 @@ export default {
         },
         sortList(sortNum) {
             if (sortNum == 0) {
-                this.sortACase = "최근 순"
+                this.sortNCase = "최근 순"
             } else if (sortNum == 1) {
-                this.sortACase = "오래된 순"
+                this.sortNCase = "오래된 순"
+            }
+            else if (sortNum == 2) {
+                this.sortNCase = "조회수 높은 순"
+            }
+            else if (sortNum == 3) {
+                this.sortNCase = "조회수 낮은 순"
             }
             this.getReviewList(sortNum)
                 .then(() => {
@@ -185,15 +186,15 @@ export default {
         async deleteReview(review) {
             console.log('삭제 버튼 클릭 - 진료기록:', review);
             try {
-                const response = await axios.delete(`http://localhost:3000/review/admin/reviewlist/${review.rvw_no}`);
+                const response = await axios.delete(`http://localhost:3000/review/admin/reviewlist/${review.RVW_NO}`);
                 console.log('진료기록 삭제 성공:', response.data);
-                this.reviewList = this.reviewList.filter(r => r.rvw_no !== review.rvw_no);
+                this.reviewList = this.reviewList.filter(r => r.RVW_NO !== review.RVW_NO);
             } catch (error) {
                 console.error('진료기록 삭제 실패:', error);
             }
         },
-        movetoareview(rvw_no) {
-            window.location.href = window.location.pathname + '/reviewdetail?rvw_no=' + rvw_no;
+        movetoareview(RVW_NO) {
+            window.location.href = window.location.pathname + '/reviewdetail?rvw_no=' + RVW_NO;
         },
     }
 };

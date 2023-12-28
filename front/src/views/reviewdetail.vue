@@ -3,11 +3,12 @@
 		<form>
 			<div class="review" v-for="review in reviewdetail" :key="review.rvw_no">
 				<div>
-					<label class="t2">작성자</label>&nbsp;&nbsp;<label class="writer"
-						style="font-size: 18px; font-style: bold;">{{ reviewdetail[0].DOC_ID }}</label>
-
-					<div class=t2>제목
+					<div class="t2 middle">
+						<span style="font-size: 18px; font-style: bold;">담당의&nbsp;&nbsp;{{ reviewdetail[0].DOC_NM }}</span>
+						<img class="pet_face" :src="getPetImg()">
 					</div>
+
+					<div class=t2>제목</div>
 					<textarea class="text2" v-model="reviewdetail[0].RVW_TITLE"
 						style="font-size: 17px;" readonly></textarea>
 
@@ -52,7 +53,14 @@ export default {
 		NReviewMain() {
 			console.log("일반유저페이지")
 			this.$router.push('/review');
-		}
+		},
+		getPetImg() {
+			if (this.reviewdetail[0].PET_IMG) {
+				return require('../../../back/uploads/uploadPet/' + this.reviewdetail[0].PET_IMG);
+			} else {
+				return require('../assets/imgempty.png');
+			}
+		},
 	}
 }
 </script>
@@ -136,5 +144,18 @@ export default {
 
 .text3:focus {
 	outline: none;
+}
+</style>
+
+<style scoped>
+.middle {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.pet_face {
+	width: 100px;
+	height: 100px;
 }
 </style>

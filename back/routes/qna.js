@@ -12,7 +12,7 @@ function sortCaseReplace(sortCase) {
     return order;
 }
 
-// 회원리스트
+// 문의리스트
 router.get('/admin/qnalist/:sortCase/:keyword', function (request, response, next) {
 
     const sortCase = request.params.sortCase;
@@ -21,7 +21,7 @@ router.get('/admin/qnalist/:sortCase/:keyword', function (request, response, nex
     let search = '';
 
     if (keyword != 'none') {
-        search = ' WHERE qna_title Like "%' + keyword + '%" ';
+        search = ' WHERE USER_NM Like "%' + keyword + '%" ';
     }
 
     const arrange = sortCaseReplace(sortCase);

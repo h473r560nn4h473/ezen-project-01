@@ -7,7 +7,7 @@
         </div>
         <!-- 추가 -->
         <ul class="navbar_icons">
-          <li @click="goToNReview()">진료기록</li>
+          <li>로고</li>
         </ul>
 
       </nav>
@@ -16,14 +16,18 @@
         <ul v-if="user.user_id == ''" class="join">
           <li @click="goToLogin">로그인</li>
           <li @click="goToJoin">회원가입</li>
+          <li @click="goToNReview()">진료기록</li>
         </ul>
 
         <ul v-else-if="adminCheck == 1" class="join">
           <li @click="goToAdmin">관리 페이지</li>
           <li @click="logout">로그아웃</li>
+          <li @click="goToNReview()">진료기록(공개)</li>
+          
         </ul>
 
         <ul v-else class="join">
+          <li @click="goToMypage">마이페이지</li>
           <li @click="logout">로그아웃</li>
         </ul>
       </nav>
@@ -79,6 +83,9 @@ export default {
     },
     goToAdmin() {
       this.$router.push({ path: '/admin/userlist' });
+    },
+    goToMypage() {
+      this.$router.push({ path: '/mypage' });
     },
     logout() {
       this.$store.commit("user", {});

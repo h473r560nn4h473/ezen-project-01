@@ -1,6 +1,7 @@
 module.exports = {
 join: `INSERT INTO TB_USER (user_id, user_pw, user_nm, user_ph, pet_no, pet_nm, pet_age, pet_sex, pet_type) VALUES (?,?,?,?,?,?,?,?,?)`,
-id_check: `SELECT * FROM TB_USER WHERE user_id = ?`,  
+id_check: `SELECT * FROM TB_USER WHERE user_id = ?`,
+doc_id_check: `SELECT * FROM tb_user, tb_doctor WHERE tb_user.USER_ID = tb_doctor.DOC_ID AND tb_user.USER_ID = ? AND tb_doctor.DOC_ID = ?`,
 get_user_no: `SELECT user_no FROM TB_USER WHERE user_id = ?`,    
 login: `SELECT user_pw FROM TB_USER WHERE user_id = ?`,
 admin_check: `SELECT user_tp FROM tb_user WHERE user_no = ?`,
@@ -11,12 +12,25 @@ pet_info: `SELECT pet_no, pet_nm, pet_type, pet_age, pet_sex, pet_img
                 FROM tb_user
                 WHERE user_no = ?`,
 deleteUser: `DELETE FROM tb_user WHERE user_no = ?`,
-reviewdoclist: `SELECT rvw_no, pet_no, doc_id, rvw_title, rvw_date, rvw_count FROM tb_review`,
+reviewdoclist: `SELECT r.*, d.DOC_NM FROM tb_review r INNER JOIN tb_doctor d ON r.DOC_ID = d.DOC_ID`,
 deleteReview: `DELETE FROM tb_review WHERE rvw_no = ?`,
-reviewdetail: `SELECT * FROM tb_review WHERE rvw_no = ?`,
+reviewdetail: `SELECT r.*, u.PET_IMG, d.DOC_NM FROM tb_review r INNER JOIN tb_user u ON r.PET_NO = u.PET_NO INNER JOIN tb_doctor d ON r.DOC_ID = d.DOC_ID WHERE r.rvw_no = ?`,
 reviewhit: `UPDATE tb_review SET rvw_count = rvw_count + 1 WHERE rvw_no = ?`,
-qnalist: `SELECT qna_no, user_no, qna_title, qna_date, qna_answer, qna_state FROM tb_qna`,
+qnalist: `SELECT q.*, u.USER_NM, d.DOC_NM FROM tb_qna q LEFT JOIN tb_user u ON q.USER_NO = u.USER_NO INNER JOIN tb_doctor d ON q.DOC_ID = d.DOC_ID`,
 deleteQna: `DELETE FROM tb_qna WHERE qna_no = ?`,
-reservationlist: `SELECT res_no, res_title, res_date, res_time, doc_id, res_content, pet_no FROM tb_reservation`,
+reservationlist: `SELECT r.*, u.USER_NM, d.DOC_NM FROM tb_reservation r INNER JOIN tb_user u ON r.PET_NO = u.PET_NO INNER JOIN tb_doctor d ON r.DOC_ID = d.DOC_ID`,
 deleteReservation: `DELETE FROM tb_reservation WHERE res_no = ?`,
+doc_info: `SELECT DOC_PW, DOC_NM, DOC_AGE, DOC_PH, DOC_EML, DOC_BIO, DOC_MJ
+               FROM tb_doctor
+               WHERE doc_id = ?`,
+get_doc_id: `SELECT doc_id, doc_nm, doc_age, doc_ph, doc_eml, doc_bio, doc_mj, doc_sex FROM tb_doctor WHERE doc_id = ?`,
+docmypage_update: `UPDATE tb_doctor 
+                    SET DOC_PW = ?, DOC_NM = ?, DOC_AGE = ?, DOC_PH = ?, DOC_EML = ?, DOC_BIO = ?, DOC_MJ = ?, DOC_SEX = ?
+                    WHERE doc_id = ?`,
+doc_check: `SELECT DOC_ID FROM TB_DOCTOR WHERE DOC_ID = ?`,
+docreservation: `SELECT * FROM tb_reservation r JOIN tb_user u ON r.PET_NO = u.PET_NO JOIN tb_doctor d ON r.DOC_ID = d.DOC_ID WHERE r.DOC_ID = ?`,
+reviewdocmypagelist: `SELECT r.*, d.DOC_NM FROM tb_review r, tb_doctor d WHERE r.DOC_ID = d.DOC_ID AND r.DOC_ID = ?`,
+reviewdocdetail: `SELECT r.*, u.PET_IMG, d.DOC_NM FROM tb_review r INNER JOIN tb_user u ON r.PET_NO = u.PET_NO INNER JOIN tb_doctor d ON r.DOC_ID = d.DOC_ID WHERE r.rvw_no = ?`,
+docQna: `SELECT q.*, u.USER_NM, d.DOC_NM FROM tb_qna q LEFT JOIN tb_user u ON q.USER_NO = u.USER_NO INNER JOIN tb_doctor d ON q.DOC_ID = d.DOC_ID WHERE q.DOC_ID = ?`,
+docQnaDetail: `SELECT q.*, u.USER_NM, d.DOC_NM FROM tb_qna q LEFT JOIN tb_user u ON q.USER_NO = u.USER_NO INNER JOIN tb_doctor d ON q.DOC_ID = d.DOC_ID WHERE q.QNA_NO = ?`,
 }

@@ -38,6 +38,28 @@ router.post('/login_process', function (request, response) {
     })
 });
 
+// connection.query(
+//     "SELECT * FROM tb_user WHERE USER_ID = ?",
+//     [id, pw],
+//     (error, results, fields) => {
+//       if (results.length > 0) {
+// console.log("user");
+//         res.send("user");
+//       } else {
+//         connection.query(
+//           "SELECT * FROM tb_user, tb_doctor WHERE tb_user.USER_ID = tb_doctor.DOC_ID AND tb_user.USER_ID = ? AND tb_doctor.DOC_ID = ?",
+//           [id, pw],
+//           (error, results, fields) => {
+//             if (results.length > 0) {
+// console.log("doctor");
+//               res.send("doctor");
+//             } else {
+// console.log("fail");
+//               res.send("fail");
+//             }
+//           }
+//         );
+
 //회원가입
 router.post('/join_process', function (request, response) {
 

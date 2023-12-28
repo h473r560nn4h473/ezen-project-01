@@ -5,15 +5,15 @@ const sql = require('../sql.js');
 const bcrypt = require('bcrypt');
 
 function sortCaseReplace(sortCase) {
-    let order = ` ORDER BY res_no DESC`; // 최근 예약 순
-    if (sortCase == 1) { // 오래된 예약 순
+    let order = ` ORDER BY res_no DESC`; // 최근 예약번호 순
+    if (sortCase == 1) { // 오래된 예약번호 순
         order = ` ORDER BY res_no`;
     }
     if (sortCase == 2) { // 최근 예약일 순
-        order = ` ORDER BY res_date DESC, res_time DESC`;
+        order = ` ORDER BY res_date DESC, res_time`;
     }
     if (sortCase == 3) { // 오래된 예약일 순
-        order = ` ORDER BY res_date, res_time`;
+        order = ` ORDER BY res_date, res_time DESC`;
     }
     return order;
 }
@@ -27,7 +27,7 @@ router.get('/admin/reservationlist/:sortCase/:keyword', function (request, respo
     let search = '';
 
     if (keyword != 'none') {
-        search = ' WHERE doc_id Like "%' + keyword + '%" ';
+        search = ' WHERE DOC_NM Like "%' + keyword + '%" ';
     }
 
     const arrange = sortCaseReplace(sortCase);

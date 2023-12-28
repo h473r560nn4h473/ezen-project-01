@@ -26,6 +26,17 @@ import Qna from './admin/qna.vue'
 import ReservationList from './admin/reservation.vue'
 import aReviewDetailPage from './admin/reviewdetail.vue'
 
+//의사 페이지
+import DocmypagePage from './mypage/docmypage.vue'
+import UpdatemypagePage from './mypage/update.vue'
+import DocReview from './mypage/docreview.vue'
+import DocReviewDetail from './mypage/docreviewdetail.vue'
+import DocReviewWrite from './mypage/docreviewwrite.vue'
+import DocQna from './mypage/docqna.vue'
+import DocQnaDetail from './mypage/docqnadetail.vue'
+import DocQnaWrite from './mypage/docqnawrite.vue'
+import DocReservation from './mypage/docreservation.vue'
+
 const routes = [
     {
         path: '/',
@@ -55,6 +66,42 @@ const routes = [
             {
                 path: '/review/reviewdetail/',
                 component: nReviewDetailPage,
+            },
+            {
+                path: '/mypage',
+                component: DocmypagePage
+            },
+            {
+                path: '/mypage/update',
+                component: UpdatemypagePage
+            },
+            {
+                 path: '/mypage/docreview',
+                 component: DocReview
+            },
+            {
+                path: '/mypage/docreview/detail',
+                component: DocReviewDetail
+            },
+            {
+                path: '/mypage/docreview/write',
+                component: DocReviewWrite
+            },
+            {
+                path: '/mypage/docqna',
+                component: DocQna
+            },
+            {
+                path: '/mypage/docqna/detail',
+                component: DocQnaDetail
+            },
+            {
+                path: '/mypage/docqna/write',
+                component: DocQnaWrite
+            },
+            {
+                path: '/mypage/docreservation',
+                component: DocReservation
             },
         ]
     },
