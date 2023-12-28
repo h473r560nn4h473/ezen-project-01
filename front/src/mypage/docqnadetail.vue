@@ -4,22 +4,33 @@
 			<div class="qna" v-for="qna in qnadetail" :key="qna.qna_no">
 				<div>
 					<div class="t2 middle">
-						<span style="font-size: 18px; font-style: bold;">작성자&nbsp;&nbsp;{{ qnadetail[0].USER_NO }}</span>
-						<!-- <img class="pet_face" :src="getPetImg()"> -->
+						<span style="font-size: 18px; font-style: bold;">작성자&nbsp;&nbsp;{{ qnadetail[0].USER_NM }}</span>
+						<img class="pet_face" :src="getQnaImg()">
 					</div>
 
 					<div class=t2>제목
 					</div>
 					<textarea class="text2" v-model="qnadetail[0].QNA_TITLE"
-						style="font-size: 17px;"></textarea>
+						style="font-size: 17px;" readonly></textarea>
 
 					<div class="t2">내용</div>
 					<div></div>
 					<textarea class="text1" v-model="qnadetail[0].QNA_CONTENT"
+						style="font-size: 17px;" readonly></textarea>
+
+				</div>
+				<div>
+					<div class="t2 middle">
+						<span style="font-size: 18px; font-style: bold;">담당의&nbsp;&nbsp;{{ qnadetail[0].DOC_NM }}</span>
+					</div>
+					<div class="t2">내용</div>
+					<div></div>
+					<textarea class="text1" v-model="qnadetail[0].QNA_ANSWER"
 						style="font-size: 17px;"></textarea>
 
 				</div>
 				<div class="btn_area">
+                    <button type="button" class="main_btn" @click="DAnswerWrite">답변작성/수정</button>
 					<button type="button" class="main_btn" @click="DQnaMain">목록으로</button>
 				</div>
 			</div>
@@ -51,13 +62,17 @@ export default {
 		});
 	},
 	methods: {
+        DAnswerWrite() {
+			console.log("의료진문의목록관리페이지")
+			this.$router.push('/mypage/docqna');
+		},
 		DQnaMain() {
 			console.log("의료진문의목록관리페이지")
 			this.$router.push('/mypage/docqna');
 		},
-		getPetImg() {
-			if (this.qnadetail[0].PET_IMG) {
-				return require('../../../back/uploads/uploadPet/' + this.qnadetail[0].PET_IMG);
+		getQnaImg() {
+			if (this.qnadetail[0].QNA_IMAGE) {
+				return require('../../../back/uploads/uploadQna/' + this.qnadetail[0].QNA_IMAGE);
 			} else {
 				return require('../assets/imgempty.png');
 			}

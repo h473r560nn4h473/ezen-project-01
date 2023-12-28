@@ -8,7 +8,7 @@
                     <div class="list-title">
                         <h2>문의사항 관리</h2>
                         <div class="search_bar">
-                            <input v-model="keyword" class="form-control me-2" type="text" placeholder="회원명 검색"
+                            <input v-model="keyword" class="form-control me-2" type="text" placeholder="회원명/담당의 검색"
                                 @keyup.enter="getQnaList(sortCase)">
                             <button class="btn btn-secondary" type="submit" @click="getQnaList(sortCase)"><i class="fa fa-search"></i></button>
                         </div>

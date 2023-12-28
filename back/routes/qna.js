@@ -21,7 +21,7 @@ router.get('/admin/qnalist/:sortCase/:keyword', function (request, response, nex
     let search = '';
 
     if (keyword != 'none') {
-        search = ' WHERE USER_NM Like "%' + keyword + '%" ';
+        search = ' WHERE USER_NM Like "%' + keyword + '%" OR DOC_NM Like "%' + keyword + '%" ';
     }
 
     const arrange = sortCaseReplace(sortCase);

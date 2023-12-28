@@ -20,6 +20,7 @@
 
 				</div>
 				<div class="btn_area">
+                    <button type="button" class="main_btn" @click="DReviewModify">수정하기</button>
 					<button type="button" class="main_btn" @click="DReviewMain">목록으로</button>
 				</div>
 			</div>
@@ -36,6 +37,11 @@ export default {
 			reviewdetail: [],
 		};
 	},
+	computed: {
+        user() {
+            return this.$store.state.user;
+        },
+    },
 	mounted() {
 		axios({
 			url: "http://localhost:3000/mypage/mypage/docreview/detail",
@@ -51,7 +57,11 @@ export default {
 		});
 	},
 	methods: {
-		DReviewMain() {
+		DReviewModify() {
+			console.log("의료진진료기록수정진입")
+			this.$router.push('/mypage/docreview/detail/modify');
+		},
+        DReviewMain() {
 			console.log("의료진진료기록관리페이지")
 			this.$router.push('/mypage/docreview');
 		},

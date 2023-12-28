@@ -30,11 +30,13 @@ import aReviewDetailPage from './admin/reviewdetail.vue'
 import DocmypagePage from './mypage/docmypage.vue'
 import UpdatemypagePage from './mypage/update.vue'
 import DocReview from './mypage/docreview.vue'
-import DocReviewDetail from './mypage/docreviewdetail.vue'
 import DocReviewWrite from './mypage/docreviewwrite.vue'
+import DocReviewDetail from './mypage/docreviewdetail.vue'
+import DocReviewModify from './mypage/docreviewmodify.vue'
 import DocQna from './mypage/docqna.vue'
-import DocQnaDetail from './mypage/docqnadetail.vue'
 import DocQnaWrite from './mypage/docqnawrite.vue'
+import DocQnaDetail from './mypage/docqnadetail.vue'
+import DocQnaModify from './mypage/docqnamodify.vue'
 import DocReservation from './mypage/docreservation.vue'
 
 const routes = [
@@ -80,24 +82,32 @@ const routes = [
                  component: DocReview
             },
             {
+                path: '/mypage/docreview/write',
+                component: DocReviewWrite
+            },
+            {
                 path: '/mypage/docreview/detail',
                 component: DocReviewDetail
             },
             {
-                path: '/mypage/docreview/write',
-                component: DocReviewWrite
+                path: '/mypage/docreview/detail/modify',
+                component: DocReviewModify
             },
             {
                 path: '/mypage/docqna',
                 component: DocQna
             },
             {
+                path: '/mypage/docqna/detail/write',
+                component: DocQnaWrite
+            },
+            {
                 path: '/mypage/docqna/detail',
                 component: DocQnaDetail
             },
             {
-                path: '/mypage/docqna/write',
-                component: DocQnaWrite
+                path: '/mypage/docqna/detail/modify',
+                component: DocQnaModify
             },
             {
                 path: '/mypage/docreservation',

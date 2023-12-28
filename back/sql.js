@@ -20,14 +20,15 @@ qnalist: `SELECT q.*, u.USER_NM, d.DOC_NM FROM tb_qna q LEFT JOIN tb_user u ON q
 deleteQna: `DELETE FROM tb_qna WHERE qna_no = ?`,
 reservationlist: `SELECT r.*, u.USER_NM, d.DOC_NM FROM tb_reservation r INNER JOIN tb_user u ON r.PET_NO = u.PET_NO INNER JOIN tb_doctor d ON r.DOC_ID = d.DOC_ID`,
 deleteReservation: `DELETE FROM tb_reservation WHERE res_no = ?`,
-doc_info: `SELECT DOC_PW, DOC_NM, DOC_AGE, DOC_PH, DOC_EML, DOC_BIO, DOC_MJ
-               FROM tb_doctor
+doc_info: `SELECT d.*, u.USER_NO
+               FROM tb_doctor d INNER JOIN tb_user u
                WHERE doc_id = ?`,
 get_doc_id: `SELECT doc_id, doc_nm, doc_age, doc_ph, doc_eml, doc_bio, doc_mj, doc_sex FROM tb_doctor WHERE doc_id = ?`,
 docmypage_update: `UPDATE tb_doctor 
                     SET DOC_PW = ?, DOC_NM = ?, DOC_AGE = ?, DOC_PH = ?, DOC_EML = ?, DOC_BIO = ?, DOC_MJ = ?, DOC_SEX = ?
                     WHERE doc_id = ?`,
-doc_check: `SELECT DOC_ID FROM TB_DOCTOR WHERE DOC_ID = ?`,
+//doc_check: `SELECT DOC_ID FROM TB_DOCTOR WHERE DOC_ID = ?`,
+doc_check: `SELECT tb_doctor.*, tb_user.USER_NO FROM tb_doctor INNER JOIN tb_user ON tb_doctor.DOC_ID = tb_user.USER_ID WHERE tb_doctor.DOC_ID = ?`,
 docreservation: `SELECT * FROM tb_reservation r JOIN tb_user u ON r.PET_NO = u.PET_NO JOIN tb_doctor d ON r.DOC_ID = d.DOC_ID WHERE r.DOC_ID = ?`,
 reviewdocmypagelist: `SELECT r.*, d.DOC_NM FROM tb_review r, tb_doctor d WHERE r.DOC_ID = d.DOC_ID AND r.DOC_ID = ?`,
 reviewdocdetail: `SELECT r.*, u.PET_IMG, d.DOC_NM FROM tb_review r INNER JOIN tb_user u ON r.PET_NO = u.PET_NO INNER JOIN tb_doctor d ON r.DOC_ID = d.DOC_ID WHERE r.rvw_no = ?`,

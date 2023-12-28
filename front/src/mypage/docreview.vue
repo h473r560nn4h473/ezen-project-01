@@ -12,6 +12,9 @@
                                 @keyup.enter="getReviewList(sortRCase)">
                             <button class="btn btn-secondary" type="submit" @click="getReviewList(sortRCase)"><i class="fa fa-search"></i></button>
                         </div>
+                        <div class="btn-area">
+                            <button class="btn btn-success" type="button" @click="DReviewWrite">진료기록 작성</button>
+                        </div>
                         <div class="list-title2">
                             <div class="dropdown">
                                 <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1"
@@ -172,6 +175,10 @@ export default {
                 console.error('진료기록 삭제 실패:', error);
             }
         },
+        DReviewWrite() {
+			console.log("의사진료기록페이지")
+			this.$router.push('/mypage/docreview/write');
+		},
         movetodreview(RVW_NO) {
             window.location.href = window.location.pathname + '/detail?rvw_no=' + RVW_NO;
         },

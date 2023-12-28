@@ -104,6 +104,32 @@ export default {
       this.$router.push({ path: '/login' });
     }
   },
+  // USER_ID = DOC_ID가 아닐 때 쫓아내는 코드 구현중
+  // mounted() {
+  //       if (this.user.user_no == '') { 
+  //           this.$swal("의료진 외 접근불가 페이지입니다.");
+  //           this.$router.push({ path: '/login' });
+  //       } else {
+  //           axios({
+  //               url: "http://localhost:3000/mypage/getUserData",
+  //               method: "POST",
+  //               data: {
+  //                   user_no: this.user.user_no,
+  //                   doc_id: this.user.doc_id,
+  //               },
+  //           }).then(res => {
+  //             const user_id = res.data.user_id;
+  //             const doc_id = res.data.doc_id;
+
+  //               if (res.data.message !== '' || user_id !== doc_id) {
+  //                   this.$swal("의료진 외 접근제한 페이지입니다.");
+  //                   this.$router.push({ path: '/' });
+  //               }
+  //           }).catch(() => {
+  //               this.$swal("접속 오류");
+  //           });
+  //       }
+  //   },
   created() {
     this.getUser();
   },
