@@ -8,35 +8,42 @@
                     <div class="list-title">
                         <h2>예약 관리</h2>
                         <div class="search_bar">
-                            <input v-model="keyword" class="form-control me-2" type="text" placeholder="회원명/담당의 검색"
-                                @keyup.enter="getReservationList(sortCase)">
-                            <button class="btn btn-secondary" type="submit" @click="getReservationList(sortCase)"><i class="fa fa-search"></i></button>
-                        </div>
-                        <div class="list-title2">
                             <div class="dropdown">
-                                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1"
-                                    data-bs-toggle="dropdown" aria-expanded="false" style="border: none;"> {{ sortCase }}
+                                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton2"
+                                data-bs-toggle="dropdown" aria-expanded="false" style="border: none;"> {{ setSearch }}
                                 </button>
-                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                    <li><a class="dropdown-item" href="#" @click="sortList(0)">최근 예약번호 순</a></li>
-                                    <li><a class="dropdown-item" href="#" @click="sortList(1)">오래된 예약번호 순</a></li>
-                                    <li><a class="dropdown-item" href="#" @click="sortList(2)">최근 예약시간 순</a></li>
-                                    <li><a class="dropdown-item" href="#" @click="sortList(3)">오래된 예약시간 순</a></li>
+                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
+                                    <li><a class="dropdown-item" href="#" @click="setSearchList(0)">예약자명</a></li>
+                                    <li><a class="dropdown-item" href="#" @click="setSearchList(1)">담당의</a></li>
                                 </ul>
                             </div>
+                            <input v-model="keyword" class="form-control me-2" type="text" placeholder="검색"
+                                @keyup.enter="getReservationList(sortCaseNum, this.setSearchNum)">
+                            <button class="btn btn-secondary" type="submit" @click="getReservationList(sortCaseNum, this.setSearchNum)"><i class="fa fa-search"></i></button>
                         </div>
+                            <div class="list-title2">
+                                <div class="dropdown">
+                                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1"
+                                    data-bs-toggle="dropdown" aria-expanded="false" style="border: none;"> {{ sortCase }}
+                                    </button>
+                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                        <li><a class="dropdown-item" href="#" @click="sortList(0)">최근 예약번호 순</a></li>
+                                        <li><a class="dropdown-item" href="#" @click="sortList(1)">오래된 예약번호 순</a></li>
+                                        <li><a class="dropdown-item" href="#" @click="sortList(2)">최근 예약시간 순</a></li>
+                                        <li><a class="dropdown-item" href="#" @click="sortList(3)">오래된 예약시간 순</a></li>
+                                    </ul>
+                                </div>
+                            </div>
                     </div>
                 </caption>
                 <thead class="table-light">
                     <tr>
                         <th scope="col" style="display: none;">번호</th>
                         <th scope="col">예약번호</th>
-                        <!-- <th scope="col">동물등록번호</th> -->
                         <th scope="col">예약자명</th>
                         <th scope="col">제목</th>
                         <th scope="col">예약시간</th>
                         <th scope="col">담당의</th>
-                        <!-- <th scope="col">예약내용</th> -->
                         <th scope="col"> </th>
                     </tr>
                 </thead>
@@ -44,12 +51,10 @@
                     <tr v-for="(reservation, i) in pageReservationList" :key="i">
                         <th scope="row" style="display: none;">{{ pageNum * onePageCnt + i + 1 }}</th>
                         <td>{{ reservation.RES_NO }}</td>
-                        <!-- <td>{{ reservation.pet_no }}</td> -->
                         <td>{{ reservation.USER_NM }}</td>
                         <td>{{ reservation.RES_TITLE }}</td>
                         <td>{{ formatDate(reservation.RES_DATE) }} {{ reservation.RES_TIME }}</td>
                         <td>{{ reservation.DOC_NM }}</td>
-                        <!-- <td>{{ reservation.res_content }}</td> -->
                         <td><button class="btn btn-outline-danger" @click="confirmDeleteReservation(reservation)">삭제</button></td>
                     </tr>
                 </tbody>
@@ -75,9 +80,9 @@ export default {
     data() {
         return {
             reservationList: [],
-            sortCase: "최근 예약번호 순",
+            sortCase: "최근 예약번호 순",   //정렬은 조건 클릭시 바로 변경되므로 페이지에 처음 접속했을 때 단지 표시만 해주는 기능
             keyword: '',
-            pageReservationList: [],  // 한 페이지에 보여줄 굿즈 리스트를 잘라 담을 새 리스트
+            pageReservationList: [],
             pageNum: 0,
             pageCnt: 0,
             onePageCnt: 10,
@@ -90,7 +95,6 @@ export default {
     },
     mounted() {
         if (this.user.user_no == '') {
-            // 일단은 로그인 상태 체크 
             this.$swal("관리자 외 접근제한 페이지입니다.");
             this.$router.push({ path: '/login' });
         } else {
@@ -112,6 +116,7 @@ export default {
     },
     created() {
         this.getReservationList();
+        this.setSearchList(0);  //페이지에 접속/새로고침하여 검색조건을 변경하지 않고 검색할시 값이 없어 undefined 에러가 발생하므로 바로 검색을 누를 경우를 대비해 기본값 0(예약자명)을 준다
     },
     methods: {
         setPage(page) {
@@ -123,14 +128,14 @@ export default {
             const start = 0 + this.pageNum * this.onePageCnt
             this.pageReservationList = this.reservationList.slice(start, start + this.onePageCnt);
         },
-        async getReservationList(sortCaseNum) {
+        async getReservationList(sortCaseNum, setSearchNum) {
             let keyword = 'none'
 
             if (this.keyword != '') {
                 keyword = this.keyword;
             }
             try {
-                const response = await axios.get(`http://localhost:3000/reservation/admin/reservationlist/${sortCaseNum}/${keyword}`);
+                const response = await axios.get(`http://localhost:3000/reservation/admin/reservationlist/${setSearchNum}/${sortCaseNum}/${keyword}`);
                 this.reservationList = response.data;
                 this.pageCnt = Math.ceil(this.reservationList.length / this.onePageCnt)
                 this.setPage(1)
@@ -138,6 +143,14 @@ export default {
             } catch (error) {
                 console.error(error);
             }
+        },
+        setSearchList(setSearchNum) {
+            if (setSearchNum == 0) {
+                this.setSearch = "예약자명"
+            } else if (setSearchNum == 1) {
+                this.setSearch = "담당의"
+            }
+            this.setSearchNum = setSearchNum;
         },
         sortList(sortNum) {
             if (sortNum == 0) {
@@ -149,7 +162,8 @@ export default {
             } else if (sortNum == 3) {
                 this.sortCase = "오래된 예약시간 순"
             }
-            this.getReservationList(sortNum)
+            this.sortNum = sortNum;
+            this.getReservationList(this.sortNum, this.setSearchNum)
                 .then(() => {
                     this.$router.push({ path: '/admin/reservationList' });
                 })
@@ -187,9 +201,9 @@ export default {
         async deleteReservation(reservation) {
             console.log('삭제 버튼 클릭 - 문의내역:', reservation);
             try {
-                const response = await axios.delete(`http://localhost:3000/reservation/admin/reservationlist/${reservation.res_no}`);
+                const response = await axios.delete(`http://localhost:3000/reservation/admin/reservationlist/${reservation.RES_NO}`);
                 console.log('진료기록 삭제 성공:', response.data);
-                this.reservationList = this.reservationList.filter(re => re.res_no !== reservation.res_no);
+                this.reservationList = this.reservationList.filter(re => re.RES_NO !== reservation.RES_NO);
             } catch (error) {
                 console.error('진료기록 삭제 실패:', error);
             }
@@ -218,6 +232,10 @@ td {
 }
 
 .dropdown {
+    margin: 0px 2px;
+}
+
+.dropdown2 {
     margin: 0px 2px;
 }
 

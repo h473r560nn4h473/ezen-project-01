@@ -17,13 +17,14 @@
           <li @click="goToLogin">로그인</li>
           <li @click="goToJoin">회원가입</li>
           <li @click="goToNReview()">진료기록</li>
+          <li @click="goToMypage">마이페이지</li>
         </ul>
 
         <ul v-else-if="adminCheck == 1" class="join">
           <li @click="goToAdmin">관리 페이지</li>
           <li @click="logout">로그아웃</li>
           <li @click="goToNReview()">진료기록(공개)</li>
-          
+          <li @click="goToMypage">마이페이지</li>
         </ul>
 
         <ul v-else class="join">

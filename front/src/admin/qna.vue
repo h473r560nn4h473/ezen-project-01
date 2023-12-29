@@ -8,9 +8,18 @@
                     <div class="list-title">
                         <h2>문의사항 관리</h2>
                         <div class="search_bar">
-                            <input v-model="keyword" class="form-control me-2" type="text" placeholder="회원명/담당의 검색"
-                                @keyup.enter="getQnaList(sortCase)">
-                            <button class="btn btn-secondary" type="submit" @click="getQnaList(sortCase)"><i class="fa fa-search"></i></button>
+                            <div class="dropdown">
+                                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton2"
+                                data-bs-toggle="dropdown" aria-expanded="false" style="border: none;"> {{ setSearch }}
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
+                                    <li><a class="dropdown-item" href="#" @click="setSearchList(0)">예약자명</a></li>
+                                    <li><a class="dropdown-item" href="#" @click="setSearchList(1)">담당의</a></li>
+                                </ul>
+                            </div>
+                            <input v-model="keyword" class="form-control me-2" type="text" placeholder="검색"
+                                @keyup.enter="getQnaList(sortCaseNum, this.setSearchNum)">
+                            <button class="btn btn-secondary" type="submit" @click="getQnaList(sortCaseNum, this.setSearchNum)"><i class="fa fa-search"></i></button>
                         </div>
                         <div class="list-title2">
                             <div class="dropdown">
@@ -108,6 +117,7 @@ export default {
     },
     created() {
         this.getQnaList();
+        this.setSearchList(0);
     },
     methods: {
         setPage(page) {
@@ -119,14 +129,14 @@ export default {
             const start = 0 + this.pageNum * this.onePageCnt
             this.pageQnaList = this.qnaList.slice(start, start + this.onePageCnt);
         },
-        async getQnaList(sortCaseNum) {
+        async getQnaList(sortCaseNum, setSearchNum) {
             let keyword = 'none'
 
             if (this.keyword != '') {
                 keyword = this.keyword;
             }
             try {
-                const response = await axios.get(`http://localhost:3000/qna/admin/qnalist/${sortCaseNum}/${keyword}`);
+                const response = await axios.get(`http://localhost:3000/qna/admin/qnalist/${setSearchNum}/${sortCaseNum}/${keyword}`);
                 this.qnaList = response.data;
                 this.pageCnt = Math.ceil(this.qnaList.length / this.onePageCnt)
                 this.setPage(1)
@@ -135,12 +145,21 @@ export default {
                 console.error(error);
             }
         },
+        setSearchList(setSearchNum) {
+            if (setSearchNum == 0) {
+                this.setSearch = "예약자명"
+            } else if (setSearchNum == 1) {
+                this.setSearch = "담당의"
+            }
+            this.setSearchNum = setSearchNum;
+        },
         sortList(sortNum) {
             if (sortNum == 0) {
                 this.sortCase = "최근 순"
             } else if (sortNum == 1) {
                 this.sortCase = "오래된 순"
             }
+            this.sortNum = sortNum;
             this.getQnaList(sortNum)
                 .then(() => {
                     this.$router.push({ path: '/admin/qnaList' });
@@ -186,9 +205,9 @@ export default {
         async deleteQna(qna) {
             console.log('삭제 버튼 클릭 - 문의내역:', qna);
             try {
-                const response = await axios.delete(`http://localhost:3000/qna/admin/qnalist/${qna.qna_no}`);
+                const response = await axios.delete(`http://localhost:3000/qna/admin/qnalist/${qna.QNA_NO}`);
                 console.log('진료기록 삭제 성공:', response.data);
-                this.qnaList = this.qnaList.filter(q => q.qna_no !== qna.qna_no);
+                this.qnaList = this.qnaList.filter(q => q.QNA_NO !== qna.QNA_NO);
             } catch (error) {
                 console.error('진료기록 삭제 실패:', error);
             }

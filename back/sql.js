@@ -20,9 +20,8 @@ qnalist: `SELECT q.*, u.USER_NM, d.DOC_NM FROM tb_qna q LEFT JOIN tb_user u ON q
 deleteQna: `DELETE FROM tb_qna WHERE qna_no = ?`,
 reservationlist: `SELECT r.*, u.USER_NM, d.DOC_NM FROM tb_reservation r INNER JOIN tb_user u ON r.PET_NO = u.PET_NO INNER JOIN tb_doctor d ON r.DOC_ID = d.DOC_ID`,
 deleteReservation: `DELETE FROM tb_reservation WHERE res_no = ?`,
-doc_info: `SELECT d.*, u.USER_NO
-               FROM tb_doctor d INNER JOIN tb_user u
-               WHERE doc_id = ?`,
+//SELECT * FROM tb_doctor WHERE doc_id = ?`,
+doc_info: `SELECT tb_doctor.*, tb_user.USER_NO, tb_user.USER_ID, tb_user.USER_TP FROM tb_doctor JOIN tb_user ON tb_doctor.DOC_ID = tb_user.USER_ID WHERE tb_user.USER_ID = ?`,
 get_doc_id: `SELECT doc_id, doc_nm, doc_age, doc_ph, doc_eml, doc_bio, doc_mj, doc_sex FROM tb_doctor WHERE doc_id = ?`,
 docmypage_update: `UPDATE tb_doctor 
                     SET DOC_PW = ?, DOC_NM = ?, DOC_AGE = ?, DOC_PH = ?, DOC_EML = ?, DOC_BIO = ?, DOC_MJ = ?, DOC_SEX = ?

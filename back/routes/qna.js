@@ -4,6 +4,30 @@ const db = require('../db.js');
 const sql = require('../sql.js');
 const bcrypt = require('bcrypt');
 
+async function getQnaList(sortCaseNum, setSearchNum, keyword) {
+    let search = '';
+
+    if (keyword != 'none') {
+        if (setSearchNum == 0) {
+            search = ` WHERE USER_NM Like "%${keyword}%"`;
+        } else if (setSearchNum == 1) {
+            search = ` WHERE DOC_NM Like "%${keyword}%"`;
+        }
+    }
+
+    const arrange = sortCaseReplace(sortCaseNum);
+
+    return new Promise((resolve, reject) => {
+        db.query(sql.qnalist + search + arrange, function (error, results, fields) {
+            if (error) {
+                console.error(error);
+                reject(error);
+            }
+            resolve(results);
+        });
+    });
+}
+
 function sortCaseReplace(sortCase) {
     let order = ` ORDER BY qna_date DESC`; // 최근 순
     if (sortCase == 1) { // 오래된 순
@@ -13,26 +37,21 @@ function sortCaseReplace(sortCase) {
 }
 
 // 문의리스트
-router.get('/admin/qnalist/:sortCase/:keyword', function (request, response, next) {
+router.get('/admin/qnalist/:setSearchNum/:sortCase/:keyword', async function (request, response, next) {
 
     const sortCase = request.params.sortCase;
+    const setSearchNum = request.params.setSearchNum;
     const keyword = request.params.keyword;
-    
-    let search = '';
-
-    if (keyword != 'none') {
-        search = ' WHERE USER_NM Like "%' + keyword + '%" OR DOC_NM Like "%' + keyword + '%" ';
-    }
 
     const arrange = sortCaseReplace(sortCase);
 
-    db.query(sql.qnalist + search + arrange, function (error, results, fields) {
-        if (error) {
-            console.error(error);
-            return response.status(500).json({ error: '문의리스트에러' });
-        }
+    try {
+        const results = await getQnaList(sortCase, setSearchNum, keyword);
         response.json(results);
-    });
+    } catch (error) {
+        console.error(error);
+        return response.status(500).json({ error: '목록에러' });
+    }
 });
 
 // 회원 삭제

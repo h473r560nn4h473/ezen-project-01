@@ -4,6 +4,30 @@ const db = require('../db.js');
 const sql = require('../sql.js');
 const bcrypt = require('bcrypt');
 
+async function getReservationList(sortCaseNum, setSearchNum, keyword) {
+    let search = '';
+
+    if (keyword != 'none') {
+        if (setSearchNum == 0) {
+            search = ` WHERE USER_NM Like "%${keyword}%"`;
+        } else if (setSearchNum == 1) {
+            search = ` WHERE DOC_NM Like "%${keyword}%"`;
+        }
+    }
+
+    const arrange = sortCaseReplace(sortCaseNum);
+
+    return new Promise((resolve, reject) => {
+        db.query(sql.reservationlist + search + arrange, function (error, results, fields) {
+            if (error) {
+                console.error(error);
+                reject(error);
+            }
+            resolve(results);
+        });
+    });
+}
+
 function sortCaseReplace(sortCase) {
     let order = ` ORDER BY res_no DESC`; // 최근 예약번호 순
     if (sortCase == 1) { // 오래된 예약번호 순
@@ -18,28 +42,21 @@ function sortCaseReplace(sortCase) {
     return order;
 }
 
-// 회원리스트
-router.get('/admin/reservationlist/:sortCase/:keyword', function (request, response, next) {
+router.get('/admin/reservationlist/:setSearchNum/:sortCase/:keyword', async function (request, response, next) {
 
     const sortCase = request.params.sortCase;
+    const setSearchNum = request.params.setSearchNum;
     const keyword = request.params.keyword;
-    
-    let search = '';
 
-    if (keyword != 'none') {
-        search = ' WHERE USER_NM Like "%' + keyword + '%" OR DOC_NM Like "%' + keyword + '%" ';
-    }
-
-    const arrange = sortCaseReplace(sortCase);
-
-    db.query(sql.reservationlist + search + arrange, function (error, results, fields) {
-        if (error) {
-            console.error(error);
-            return response.status(500).json({ error: '목록에러' });
-        }
+    try {
+        const results = await getReservationList(sortCase, setSearchNum, keyword);
         response.json(results);
-    });
+    } catch (error) {
+        console.error(error);
+        return response.status(500).json({ error: '목록에러' });
+    }
 });
+
 
 // 회원 삭제
 router.delete('/admin/reservationlist/:res_no', function (request, response, next) {
