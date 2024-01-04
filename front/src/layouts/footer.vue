@@ -1,5 +1,5 @@
 <template>
-    <footer class="form">
+    <footer class="footer_form">
         <div class="f_add">
             <p>&copy; 2023</p>
             <p>회사소개 | 개인정보처리방침 | 이용약관 | 사업자정보<br>
@@ -21,7 +21,7 @@ export default ({
     padding: 0;
   }
   
-.form{
+.footer_form{
     margin: 0;
     padding: 0;
     left: 0;   

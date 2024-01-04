@@ -10,7 +10,7 @@
             </div>
 
             <div>
-                <input type="password" @keyup.enter="login()" class="form-control" placeholder="비밀번호" v-model="user_pw" />
+                <form><input type="password" @keyup.enter="login()" class="form-control" placeholder="비밀번호" v-model="user_pw" autoComplete="off"/></form>
                 <label for="floatingPassword"></label>
             </div>
 
@@ -20,7 +20,7 @@
                     <img :src="require(`../assets/btn_kakao.png`)" class="btn_kakao"/>
                     <img :src="require(`../assets/btn_naver.png`)" class="btn_naver"/> <!-- 로고 파일 크기를 카카오와 동일하게 축소함 -->
             </div>
-            <img src="../assets/btn_kakao.png" />
+            <div class="find" @click="goToFind()">아이디 / 비밀번호 찾기</div>
         </div>
     </main>
 </template>
@@ -51,73 +51,49 @@ export default {
                     user_pw: this.user_pw
                 },
             })
-                .then(res => {
-                    if (res.data.message == 'undefined_id') {
-                        this.$swal("존재하지 않는 아이디입니다.")
-                    }
-                    else if (res.data.message == 'incorrect_pw') {
-                        this.$swal("비밀번호가 틀렸습니다.")
-                    }
-                    else {
-                        this.$store.commit("user", { user_id: this.user_id, user_no: res.data.message })
-                        this.$swal({
-                            position: 'top',
-                            icon: 'success',
-                            title: '로그인 성공!',
-                            showConfirmButton: false,
-                            timer: 1000
-                        })
-                        this.$router.push({ path: '/' });  // 메인 화면으로 이동
-                    }
-                })
-                .catch(err => {
-                    console.log(err);
-                })
+            .then(res => {
+                if (res.data.message == 'undefined_id') {
+                    this.$swal("존재하지 않는 아이디입니다.")
+                }
+                else if (res.data.message == 'incorrect_pw') {
+                    this.$swal("비밀번호가 틀렸습니다.")
+                }
+                else {
+                    this.$store.commit("user", { user_id: this.user_id, user_no: res.data.message })
+                    this.$swal({
+                        position: 'top',
+                        icon: 'success',
+                        title: '로그인 성공!',
+                        showConfirmButton: false,
+                        timer: 1000
+                    })
+                    this.$router.push({ path: '/' });  // 메인 화면으로 이동
+                }
+            })
+            .catch(err => {
+                console.log(err);
+            })
         },
-
-       
+        goToFind() {
+            this.$router.push({ path: 'find' });
+        },
     },
 };
 </script>
 
-<!-- <script>
-export default {
-  data() {
-    return {
-      id: "",
-      pw: "",
-    };
-  },
-  methods: {
-    login() {
-      // Node.js API 호출
-      axios.post("/api/login", {
-        id: this.id,
-        pw: this.pw,
-      })
-      .then((response) => {
-        if (response.data === "user") {
-          alert("일반인 권한으로 로그인되었습니다.");
-        } else if (response.data === "doctor") {
-          alert("의사 권한으로 로그인되었습니다.");
-        } else if (response.data === "admin") {
-          alert("관리자 권한으로 로그인되었습니다.");
-        } else {
-          alert("로그인에 실패하였습니다.");
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-    },
-  },
-};
-</script> -->
-
 <style scoped>
+@font-face {
+    font-family: 'GmarketSansMedium';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+
 * {
     padding: 0;
     margin: 0;
+
 }
 
 .logo img {
@@ -127,13 +103,13 @@ export default {
     display: block;
     margin: auto;
     position: relative;
-    top: 40px;
+    top: 20px;
 }
 
 .login-form {
     display: grid;
     width: 400px;
-    height: 600px;
+    height: 650px;
     margin: 6% auto;
     border: solid 2px rgb(237, 237, 237);
     background-color: #fcf9db;
@@ -153,7 +129,8 @@ export default {
     text-align: center;
     border-radius: 8px;
     position: relative;
-    top: 30px;
+    top: 20px;
+    font-family: 'GmarketSansMedium';
 }
 
 input::placeholder {
@@ -170,15 +147,71 @@ input:focus {
     font-size: 16px;
     display: inline;
     margin-left: 20%;
-    margin-bottom: 30px;
+    margin-bottom: 50px;
     border: solid 2px rgb(255, 204, 122);
     border-radius: 8px;
     background-color: rgb(255, 210, 107);
     position: relative;
-    top: 30px;
+    top: 50px;
+    font-family: 'GmarketSansMedium';
+}
+
+.login-form .btn:hover {
+    cursor: pointer;
+}
+
+/* sns btn */
+/* .login-form .btn_kakao {
+    scale: 50%;
+    position: relative;
+    left: 115px;
+    top: 47px;
+
+
+}
+
+.login-form .btn_naver {
+    scale: 24%;
+    position: relative;
+    left: 33px;
+    top: 5px;
+
+} */
+
+.login-form .btn_kakao:hover {
+    cursor: pointer;
+}
+
+.login-form .btn_naver:hover {
+    cursor: pointer;
+}
+
+/* .login-form .img-fluid {
+    width: 175px;
+    height: 38px;
+    cursor: pointer;
+} */
+
+.find {
+    position: relative;
+    bottom: 20px;
+    height: 30px;
+    text-align: center;
+    padding-top: 20px;
+    font-size: 0.8rem;
+    color: #aaa;
+    cursor: pointer;
+    /* border: 1px solid red; */
+}
+
+#naverIdLogin {
+    left: 210px;
+    top: -30px;
+    position: relative;
 }
 
 .login-form .btn_kakao {
+    margin-top: 5px;
     scale: 75%;
     position: relative;
     left: 75px;
@@ -186,6 +219,7 @@ input:focus {
 }
 
 .login-form .btn_naver {
+    margin-top: 5px;
     scale: 75%;
     position: relative;
     left: 125px;

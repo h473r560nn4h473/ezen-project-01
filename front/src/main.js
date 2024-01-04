@@ -13,9 +13,10 @@ import adminLayout from './layouts/adminLayout.vue'
 
 // 유저 페이지
 import HelloWorld from './views/HelloWorld.vue'
-import JoinPage from './views/join.vue'
-import JoincondPage from './views/joincond.vue'
+import JoinPage from './views/join2.vue'
+import JoincondPage from './views/join1.vue'
 import LoginPage from './views/login.vue'
+import FindPage from './views/find.vue'
 import nReviewPage from './views/review.vue'
 import nReviewDetailPage from './views/reviewdetail.vue'
 
@@ -52,6 +53,10 @@ const routes = [
             {
                 path: '/login',
                 component: LoginPage,
+            },
+            {
+                path: '/find',
+                component: FindPage,
             },
             {
                 path: '/join',

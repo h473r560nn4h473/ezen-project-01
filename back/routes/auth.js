@@ -38,28 +38,6 @@ router.post('/login_process', function (request, response) {
     })
 });
 
-// connection.query(
-//     "SELECT * FROM tb_user WHERE USER_ID = ?",
-//     [id, pw],
-//     (error, results, fields) => {
-//       if (results.length > 0) {
-// console.log("user");
-//         res.send("user");
-//       } else {
-//         connection.query(
-//           "SELECT * FROM tb_user, tb_doctor WHERE tb_user.USER_ID = tb_doctor.DOC_ID AND tb_user.USER_ID = ? AND tb_doctor.DOC_ID = ?",
-//           [id, pw],
-//           (error, results, fields) => {
-//             if (results.length > 0) {
-// console.log("doctor");
-//               res.send("doctor");
-//             } else {
-// console.log("fail");
-//               res.send("fail");
-//             }
-//           }
-//         );
-
 //회원가입
 router.post('/join_process', function (request, response) {
 
@@ -83,6 +61,24 @@ router.post('/join_process', function (request, response) {
             return response.status(200).json({
                 message: 'already_exist_id'
             })
+        }
+    })
+});
+
+//아이디중복확인
+router.post('/idcheck', function (request, response) {
+    const user = request.body;
+
+    db.query(sql.checkDuplicate, [user.user_id], function (error, results) {
+        if (error) {
+            return response.status(500).json({
+                message: 'DB_error'
+            })
+        }
+        if (results.length > 0) {
+            response.send('중복');
+        } else {
+            response.send('확인');
         }
     })
 });
@@ -159,6 +155,77 @@ router.get('/admin/getPetData/:user_no', function (request, response, next) {
             return response.status(500).json({ error: '동물정보에러' });
         }
         response.json(results);
+    });
+});
+
+// 아이디 찾기
+router.post('/findId', function (request, response, next) {
+    const user_ph = request.body.user_ph;
+
+    db.query(sql.id_find, [user_ph], function (error, results, fields) {
+        if (error) {
+            console.error(error);
+            return response.status(500).json({ error: '회원 에러' });
+        }
+
+        if (results.length === 0) {
+            // 휴대전화번호가 데이터베이스에 존재하지 않는 경우
+            return response.status(404).json({ message: 'user_not_found' });
+        }
+
+        const user_id = results[0].user_id; // 사용자 아이디를 가져옴
+        return response.status(200).json({
+            message: 'user_ph',
+            user_id: user_id
+        });
+    });
+});
+
+// 임시 비밀번호
+function generateTempPassword() {
+    const length = 8; // 임시 비밀번호의 길이
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let tempPassword = '';
+
+    for (let i = 0; i < length; i++) {
+        const randomIndex = Math.floor(Math.random() * characters.length);
+        tempPassword += characters[randomIndex];
+    }
+
+    return tempPassword;
+}
+
+// 비밀번호 찾기
+router.post('/findPw', function (request, response, next) {
+    const user_id = request.body.user_id;
+    const user_ph = request.body.user_ph;
+
+    db.query(sql.user_check, [user_ph, user_id], async function (error, results, fields) {
+        if (error) {
+            console.error(error);
+            return response.status(500).json({ error: '회원 에러' });
+        }
+
+        if (results.length == 0) {
+            // 휴대전화번호가 데이터베이스에 존재하지 않는 경우
+            return response.status(404).json({ message: 'user_not_found' });
+        }
+
+        const user_pw = generateTempPassword(); // 임시 비밀번호 생성
+
+        const encryptedPW = bcrypt.hashSync(user_pw, 10); // 임시 비밀번호 암호화
+
+        // 업데이트
+        db.query(sql.pass_update_tem, [encryptedPW, user_id], function (error, results, fields) {
+            if (error) {
+                console.error(error);
+                return response.status(500).json({ error: '비번 에러' });
+            }
+            return response.status(200).json({
+                message: user_pw
+            });
+        });
+
     });
 });
 
