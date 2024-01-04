@@ -17,45 +17,45 @@
           <h2>보호자 정보</h2>
           <div class="input_row">
             <label for="id" class="item">아이디 <span class="red">*</span></label>
-            <input type="text" id="id" v-model="user_id" :minlength="min_uid" :maxlength="max_uid" placeholder="영문, 숫자 조합 3~20자"/>
-            <button @click.prevent="checkDuplicate($event)">중복확인</button>
+            <input type="text" id="id" v-model="user_id" :minlength="min_uid" :maxlength="max_uid" placeholder="영문, 숫자 조합 3~20자" @input="checkUid" />
+            <button @click.prevent="checkDuplicate($event)" v-bind:disabled="errorUid !== false">중복확인</button>
           </div>
           <div class="warning_row"><p class="warning" v-show="errorUid">영문, 숫자 조합 3~20자</p></div>
           <div class="warning_row"><p class="warning">{{ message }}</p></div>
           <div class="input_row">
             <label for="pw" class="item">비밀번호 <span class="red">*</span></label>
-            <input type="password" id="pw" v-model="user_pw" :minlength="min_upw" placeholder="영문, 숫자, 특수문자 조합 8자 이상" />
+            <input type="password" id="pw" v-model="user_pw" :minlength="min_upw" placeholder="영문, 숫자, 특수문자 조합 8자 이상" @input="checkUpw" />
           </div>
           <div class="warning_row"><p class="warning" v-show="errorUpw">영문, 숫자, 특수문자 조합 8자 이상</p></div>
           <div class="input_row">
             <label for="pw_check" class="item">비밀번호 확인 <span class="red">*</span></label>
-            <input type="password" id="pw_check" v-model="user_pw_ck" placeholder="비밀번호 재입력" />
+            <input type="password" id="pw_check" v-model="user_pw_ck" placeholder="비밀번호 재입력" @input="checkUpw2" />
           </div>
           <div class="warning_row"><p class="warning" v-show="errorUpw2">비밀번호가 일치하지 않습니다.</p></div>
           <div class="input_row">
             <label for="name" class="item">이름 <span class="red">*</span></label>
-            <input type="text" id="name" v-model="user_nm" />
+            <input type="text" id="name" v-model="user_nm" placeholder="이름 입력" @input="checkUnm" />
           </div>
           <div class="warning_row"><p class="warning" v-show="errorUnm">이름을 입력하세요.</p></div>
           <div class="input_row">
             <label for="tel" class="item">전화번호 <span class="red">*</span></label>
-            <input type="tel" id="tel" @input="validatePhoneNumber" v-model="user_ph" :minlength="min_uph" :maxlength="max_uph"/>
+            <input type="tel" id="tel" @input="checkUph" v-model="user_ph" :minlength="min_uph" :maxlength="max_uph" placeholder="전화번호 입력" />
           </div>
           <div class="warning_row"><p class="warning" v-show="errorUph">전화번호를 입력하세요.</p></div>
           <h2>펫(반려동물) 정보</h2>
           <div class="input_row">
             <label for="pet_no" class="item">동물등록번호 <span class="red">*</span></label>
-            <input type="text" id="pet_no" @input="validatePetNumber" v-model="pet_no" :maxlength="max_pno" placeholder = "숫자 15자리">
+            <input type="text" id="pet_no" @input="checkPno" v-model="pet_no" :maxlength="max_pno" placeholder="등록번호 숫자 15자리" />
           </div>
           <div class="warning_row"><p class="warning" v-show="errorPno">숫자 15자리</p></div>
           <div class="input_row">
             <label for="pet_nm" class="item">펫 이름 <span class="red">*</span></label>
-            <input type="text" id="pet_nm" v-model="pet_nm">
+            <input type="text" id="pet_nm" v-model="pet_nm" placeholder="펫이름 입력" @input="checkPnm">
           </div>
           <div class="warning_row"><p class="warning" v-show="errorPnm">펫 이름을 입력하세요.</p></div>
           <div class="input_row">
             <label for="pet_age" class="item">펫 나이 <span class="red">*</span></label>
-            <input type="text" id="pet_age" @input="validatePetAge" v-model="pet_age" placeholder="숫자만">
+            <input type="text" id="pet_age" @input="checkPag" v-model="pet_age" placeholder="펫나이 숫자만" />
           </div>
           <div class="warning_row"><p class="warning" v-show="errorPag">펫 나이를 입력하세요.</p></div>
           <div class="input_row">
@@ -63,13 +63,13 @@
             <div class="sel_wrap">
               <div class="sel_box">
                 <label for="female" class="sel_sex">
-                  <input type="radio" id="female" name="sex" v-model="pet_sex" :value="1" />
+                  <input type="radio" id="female" name="sex" v-model="pet_sex" :value="1" @input="checkPsx" />
                   <span>암</span>
                 </label>
               </div>
               <div class="sel_box">
                 <label for="male" class="sel_sex">
-                  <input type="radio" id="male" name="sex" v-model="pet_sex" :value="2" />
+                  <input type="radio" id="male" name="sex" v-model="pet_sex" :value="2" @input="checkPsx" />
                   <span>수</span>
                 </label>
               </div>
@@ -78,7 +78,7 @@
           <div class="warning_row"><p class="warning" v-show="errorPsx">펫 성별을 선택하세요.</p></div>
           <div class="input_row">
             <label for="pet_type" class="item">펫 종류 <span class="red">*</span></label>
-            <input type="text" id="pet_type" v-model="pet_type" />
+            <input type="text" id="pet_type" v-model="pet_type" @input="checkPtp" placeholder="펫 종류 선택" />
           </div>
           <div class="warning_row"><p class="warning" v-show="errorPtp">펫 종류를 선택하세요.</p></div>
           <div class="notice">전화번호는 회원님의 질문에 대한 답변과 입원한 환자에 대한 정보를 더 쉽게 제공하기 위한 용도로만 사용됩니다.</div>
@@ -229,26 +229,21 @@ export default {
     validateInput(input, field) { //숫자 이외의 문자 제거
       this[field] = input.replace(/\D/g, '');
     },
-    validatePhoneNumber() { //휴대전화번호 숫자만 입력가능
-      this.validateInput(this.user_ph, 'user_ph');
-    },
-    validatePetNumber() { //동물등록번호 숫자만 입력가능
-      this.validateInput(this.pet_no, 'pet_no');
-    },
-    validatePetAge() {  //동물연령 숫자만 입력가능
-      this.validateInput(this.pet_age, 'pet_age');
-    },
     goBack() {
       this.$router.go(-1)
     },
     checkUid() {
-        const validateId = /^(?=.*[a-z])(?=.*\d)[a-z\d]{3,20}$/i;
-
-        if (validateId.test(this.user_id) && this.user_id) {
-          this.errorUid = false;
-        } else {
-          this.errorUid = true;
-        }
+      const validateUid = /^\s*(?=.*[a-z])(?=.*\d)[a-z\d\s]{3,20}\s*$/i;
+      this.user_id = this.user_id.replace(/\s+/g, '');
+      if (this.user_id === '') {
+        this.errorUid = undefined
+        this.errorDup = undefined
+        this.message = ""
+      } else if (validateUid.test(this.user_id)) {
+        this.errorUid = false
+      } else {
+        this.errorUid = true
+      }
     },
     checkDuplicate(event) {
       event.stopPropagation();  //중복확인 버튼 클릭시 부모 @submit.prevent="onSubmitForm"가 같이 실행되는데 이를 방지하기 위함
@@ -277,22 +272,28 @@ export default {
       })
     },
     checkUpw() {
-      const validateUpw = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*()])[A-Za-z\d!@#$%^&*()]{8,}$/
+      const validateUpw = /^\s*(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*()])[A-Za-z\d!@#$%^&*()]{8,}\s*$/;
 
-      if (validateUpw.test(this.user_pw) && this.user_pw) {
-        this.errorUpw = false;
+      if (this.user_pw === '') {
+        this.errorUpw = undefined
+      } else if (validateUpw.test(this.user_pw)) {
+        this.errorUpw = false
       } else {
-        this.errorUpw = true;
+        this.errorUpw = true
       }
     },
     checkUpw2() {
-      if (this.user_pw_ck && this.user_pw_ck === this.user_pw) {
+
+      if (this.user_pw_ck === '') {
+        this.errorUpw2 = undefined
+      } else if (this.user_pw_ck === this.user_pw) {
         this.errorUpw2 = false;
       } else {
         this.errorUpw2 = true;
       }
     },
     checkUnm() {
+
       if (this.user_nm !== '') {
         this.errorUnm = false;
       } else {
@@ -301,6 +302,7 @@ export default {
     },
     checkUph() {
       const validateUph = /^[0-9]{10,11}$/
+      this.validateInput(this.user_ph, 'user_ph');
 
       if (validateUph.test(this.user_ph) && this.user_ph) {
         this.errorUph = false;
@@ -310,6 +312,7 @@ export default {
     },
     checkPno() {
       const validatePno = /^[0-9]{15,}$/
+      this.validateInput(this.pet_no, 'pet_no');
 
       if (validatePno.test(this.pet_no) && this.pet_no) {
         this.errorPno = false;
@@ -318,6 +321,7 @@ export default {
       }
     },
     checkPnm() {
+      
       if (this.pet_nm !== '') {
         this.errorPnm = false;
       } else {
@@ -325,6 +329,8 @@ export default {
       }
     },
     checkPag() {
+      this.validateInput(this.pet_age, 'pet_age');
+
       if (this.pet_age !== '') {
         this.errorPag = false;
       } else {
@@ -339,6 +345,7 @@ export default {
       }
     },
     checkPtp() {
+
       if (this.pet_type !== '') {
         this.errorPtp = false;
       } else {
@@ -346,47 +353,6 @@ export default {
       }
     },
   },
-  watch: {
-    user_id : function() {
-      this.user_id = this.user_id.replace(/\s+/g, '');
-      this.checkUid()
-    },
-    user_pw : function() {
-      this.user_pw = this.user_pw.replace(/\s+/g, '');
-      this.checkUpw()
-    },
-    user_pw_ck : function() {
-      this.user_pw_ck = this.user_pw_ck.replace(/\s+/g, '');
-      this.checkUpw2()
-    },
-    user_nm : function() {
-      this.user_nm = this.user_nm.replace(/\s+/g, '');
-      this.checkUnm()
-    },
-    user_ph : function() {
-      this.user_ph = this.user_ph.replace(/\s+/g, '');
-      this.checkUph()
-    },
-    pet_no : function() {
-      this.pet_no = this.pet_no.replace(/\s+/g, '');
-      this.checkPno()
-    },
-    pet_nm : function() {
-      this.pet_nm = this.pet_nm.replace(/\s+/g, '');
-      this.checkPnm()
-    },
-    pet_age : function() {
-      this.pet_age = this.pet_age.replace(/\s+/g, '');
-      this.checkPag()
-    },
-    pet_sex : function() {
-      this.checkPsx()
-    },
-    pet_type : function() {
-      this.pet_type = this.pet_type.replace(/\s+/g, '');
-      this.checkPtp()
-    },
-  }
 }
 
 
