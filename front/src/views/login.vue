@@ -16,7 +16,7 @@
 
             <div>
                 <button type="button" class="btn" @click="login()">로그인</button>
-                <br />
+                <br>
                     <img :src="require(`../assets/btn_kakao.png`)" class="btn_kakao"/>
                     <img :src="require(`../assets/btn_naver.png`)" class="btn_naver"/> <!-- 로고 파일 크기를 카카오와 동일하게 축소함 -->
             </div>
@@ -65,7 +65,7 @@ export default {
                         icon: 'success',
                         title: '로그인 성공!',
                         showConfirmButton: false,
-                        timer: 1000
+                        timer: 1500
                     })
                     this.$router.push({ path: '/' });  // 메인 화면으로 이동
                 }

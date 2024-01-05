@@ -23,6 +23,10 @@
                 <i class="fa fa-user-circle"></i>
                 <p>예약 관리</p>
             </router-link>
+            <router-link to="/admin/goodslist">
+                <i class="fa fa-user-circle"></i>
+                <p>상품 관리</p>
+            </router-link>
             <br />
             <button type="button" class="big_red_btn" @click="logout">로그아웃</button>
         </div>

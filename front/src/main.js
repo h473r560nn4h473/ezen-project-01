@@ -26,6 +26,9 @@ import ReviewList from './admin/review.vue'
 import Qna from './admin/qna.vue'
 import ReservationList from './admin/reservation.vue'
 import aReviewDetailPage from './admin/reviewdetail.vue'
+import GoodsMain from './admin/goods.vue'
+import GoodsWrite from './admin/goodswrite.vue'
+import GoodsModify from './admin/goodsmodify.vue'
 
 //의사 페이지
 import DocmypagePage from './mypage/docmypage.vue'
@@ -144,6 +147,19 @@ const routes = [
             {
                 path: 'reviewlist/reviewdetail/',
                 component: aReviewDetailPage,
+            
+            },
+            {
+                path: 'goodslist',
+                component: GoodsMain,
+            },
+            {
+                path: 'goodswrite',
+                component: GoodsWrite,
+            },
+            {
+                path: 'goodslist/goodsmodify/',
+                component: GoodsModify,
             },
         ]
     },

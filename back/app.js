@@ -15,12 +15,14 @@ const reviewRouter = require('./routes/review');
 const qnaRouter = require('./routes/qna');
 const reservationRouter = require('./routes/reservation');
 const mypageRouter = require('./routes/mypage');
+const goodsRouter = require('./routes/goods');
 
 app.use('/auth', authRouter);
 app.use('/review', reviewRouter);
 app.use('/qna', qnaRouter);
 app.use('/reservation', reservationRouter);
 app.use('/mypage', mypageRouter);
+app.use('/goods', goodsRouter);
 
 app.listen(3000, function() {
     console.log('Server Running at http://localhost:3000');

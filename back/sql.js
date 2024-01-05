@@ -37,4 +37,16 @@ user_check: `SELECT user_no FROM tb_user WHERE user_ph = ? AND user_id = ?`,
 pass_update_tem: `UPDATE tb_user SET user_pw = ? WHERE user_id = ?`,
 
 checkDuplicate: `SELECT * FROM tb_user WHERE user_id = ?`,
+
+goods_list: `SELECT * FROM tb_goods`,
+goods_modify_look: `SELECT * FROM tb_goods WHERE goods_no = ?`,
+delete_goods_2: `DELETE FROM tb_goods WHERE GOODS_NO = ?`,
+get_img_nm: `SELECT GOODS_IMG FROM tb_goods WHERE GOODS_NO = ?`,
+update_goods: `UPDATE tb_goods SET GOODS_NM = ?, GOODS_PRICE = ? WHERE GOODS_NO = ?`,
+
+goods_add: `INSERT INTO tb_goods (goods_nm, goods_price) VALUES (?,?)`,
+add_image: `UPDATE tb_goods SET goods_img = ? WHERE goods_no = ?`,
+goods_check: `SELECT * FROM tb_goods WHERE goods_nm = ?`,
+get_goods_no: `SELECT goods_no FROM tb_goods WHERE goods_nm = ?`,
+delete_goods: `DELETE FROM tb_goods WHERE goods_nm = ?`,
 }
