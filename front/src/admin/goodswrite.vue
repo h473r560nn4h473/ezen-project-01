@@ -1,41 +1,31 @@
 <template>
-    <div @submit.prevent="onSubmitWrite" class="form-container">
-        <form class="write-form">
-            <div class="ALL">
-                <label class="top" style="font-size: 40px; font-style: bold;">상품등록</label>
-                <div class="form-group2">
-                    <label for="goods_nm" class="form-label">상품명</label>
-                    <input type="text" v-model="goods_nm" class="form-input">
-                </div>
-  
-                <div class="form-group2">
-                    <label for="goods_price" class="form-label">상품가격</label>
-                    <input type="text" v-model="goods_price" class="form-input" @input="bindNumber">
-                </div>
-            <div >
-                <label >이미지 첨부* </label>
-                <div >
-                    <input type="file" accept="image/*" @change="uploadFile($event.target.files)"> 
-                </div>
-            </div>
-                <button type="submit" :disabled="loadingImg === undefined || !loadingImg">등록</button>
-            </div>
-        
-        </form>
-
+    <div>
+      <form @submit.prevent="submitForm">
+        <label for="goods_nm">상품명:</label>
+        <input type="text" id="goods_nm" v-model="goods_nm" required>
+        <br>
+        <label for="goods_price">상품가격:</label>
+        <input type="text" id="goods_price" v-model="goods_price" @input="bindNumber" required>
+        <br>
+        <label for="productImage">상품사진:</label>
+        <input type="file" id="goods_img" @change="onFileChange" required>
+        <br>
+        <img :src="previewImage" v-if="previewImage" style="max-width: 200px; max-height: 200px;">
+        <button type="submit">제출</button>
+      </form>
     </div>
-</template>
+  </template>
 
 <script>
 import axios from 'axios';
 
 export default {
-	data() {
+    data() {
 		return {
 			goods_nm: '',
             goods_price: '',
-            goods_image: '',
-            loadingImg: undefined,
+            goods_img: null,
+            previewImage: null,
 		};
 	},
 	computed: {
@@ -68,55 +58,17 @@ export default {
         }
     },
 	methods: {
-        async uploadFile(file) {
-            let name = "";
-            if (file) {
-                name = file[0].name;
-            } else {
-                return;     // 파일 미선택 시 반환
-            }
-
-            const formData = new FormData();
-            
-            formData.append('img', file[0]);
-            try {  
-                axios({
-                    url: `http://localhost:3000/goods/admin/upload_img`,
-                    method: 'POST',
-                    headers: {'Content-Type': 'multipart/form-data'},
-                    data: formData
-                })
-                .then ((response) => {
-                    if (response.data.message == 'success'){
-                        this.goods_image = name;
-                        console.log("이미지로딩중");
-                        this.loadingImg = true;
-                    } else {
-                        this.loadingImg = false;
-                        this.$swal("DB 에러");
-                    }
-                })
-                .catch(e => {
-                    console.log(e);
-                })
-                return true;
-            } catch(err) {
-                console.log(err);
-                return false;
-            }
+        onFileChange(e) {
+            this.goods_img = e.target.files[0];
+            this.previewImage = URL.createObjectURL(this.goods_img);
         },
-        onSubmitWrite() {
-            axios({
-                url: "http://localhost:3000/goods/admin/add_goods",
-                method: "POST", 
-                data: { 
-                    goods_nm: this.goods_nm,
-                    goods_price: this.goods_price,
-                    goods_img: this.goods_image,
-                },
-            })
-            .then((res) => {
-                if(res.data.message=='add_complete'){
+        submitForm() {
+            const formData = new FormData();
+            formData.append('goods_nm', this.goods_nm);
+            formData.append('goods_price', this.goods_price);
+            formData.append('goods_img', this.goods_img);
+            axios.post('http://localhost:3000/goods/admin/add_goods', formData).then((res) => {
+                if(res.data === 'success') {
                     this.$swal({
                         icon: 'success',
                         title: '제품 등록 성공!',
@@ -126,10 +78,6 @@ export default {
                     .then(() => {
                         window.location.href = "http://localhost:8080/admin/goodslist";
                     })
-                } else if (res.data.message == 'already_exist_goods'){
-                    this.$swal("이미 등록된 제품입니다.");
-                } else if (res.data.message == '파일 변경 실패'){
-                    this.$swal("파일 변경 실패");
                 } else {
                     this.$swal("제품 등록 실패");
                 }
@@ -225,17 +173,10 @@ export default {
 .text3:focus {
 	outline: none;
 }
-</style>
 
-<style scoped>
-.middle {
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-}
-
-.goods_img {
-	width: 100px;
-	height: 100px;
+.loading {
+  background: transparent url('https://miro.medium.com/max/882/1*9EBHIOzhE1XfMYoKz1JcsQ.gif') center no-repeat;
+  height: 400px;
+  width: 400px;
 }
 </style>

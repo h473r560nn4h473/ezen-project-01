@@ -36,20 +36,6 @@ export default {
 			goodslist: [],
 		};
 	},
-	// mounted() {
-	// 	axios({
-	// 		url: "http://localhost:3000/goods/admin/goodsmodify",
-	// 		method: "POST",
-	// 		data: {
-	// 			goods_no: this.$route.query.goods_no
-	// 		},
-	// 	}).then(response => {
-	// 		console.log(response.data);
-	// 		this.goodslist = response.data;
-	// 	}).catch(error => {
-	// 		alert(error);
-	// 	});
-	// },
     computed: {
         user() {
             return this.$store.state.user;
