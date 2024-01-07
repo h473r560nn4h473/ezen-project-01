@@ -11,7 +11,7 @@ const path = require("path");
 const upload = multer({
     storage: multer.memoryStorage(),
     limits: {
-        fileSize: 5 * 1024 * 1024,
+        fileSize: 3 * 1024 * 1024,
     },
 });
 
@@ -21,7 +21,8 @@ router.post('/admin/add_goods', upload.single('goods_img'), (req, res) => {
     db.query(sql.goods_add, [goods_nm, goods_price], (err, result) => {
         if (err) throw err;
         const goods_no = result.insertId;
-        const filename = `${goods_nm}_${goods_no}.${req.file.originalname.split('.').pop()}`;
+        const date = new Date().toJSON().slice(0, 10);
+        const filename = `${date}_${goods_no}.${req.file.originalname.split('.').pop()}`;
         fs.writeFile(`${__dirname}` + `../../uploads/uploadGoods/${filename}`, goods_img, (err2) => {
             if (err2) throw err2;
             db.query(sql.add_image, [filename, goods_no], (err3) => {
@@ -29,6 +30,9 @@ router.post('/admin/add_goods', upload.single('goods_img'), (req, res) => {
                 res.send('success');
             });
         });
+    }, (error) => {
+        console.log(error);
+        res.send('error');
     });
 });
 

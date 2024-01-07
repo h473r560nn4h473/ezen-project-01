@@ -1,20 +1,21 @@
 <template>
     <div>
-      <form @submit.prevent="submitForm">
-        <label for="goods_nm">상품명:</label>
-        <input type="text" id="goods_nm" v-model="goods_nm" required>
-        <br>
-        <label for="goods_price">상품가격:</label>
-        <input type="text" id="goods_price" v-model="goods_price" @input="bindNumber" required>
-        <br>
-        <label for="productImage">상품사진:</label>
-        <input type="file" id="goods_img" @change="onFileChange" required>
-        <br>
-        <img :src="previewImage" v-if="previewImage" style="max-width: 200px; max-height: 200px;">
-        <button type="submit">제출</button>
-      </form>
+        <form @submit.prevent="submitForm">
+            <label for="goods_nm">상품명:</label>
+            <input type="text" id="goods_nm" v-model="goods_nm" required>
+            <br>
+            <label for="goods_price">상품가격:</label>
+            <input type="text" id="goods_price" v-model="goods_price" @input="bindNumber" required>
+            <br>
+            <label for="productImage">상품사진:</label>
+            <input type="file" id="goods_img" @change="onFileChange" required>
+            <tr>용량제한 3MB</tr>
+            <br>
+            <img :src="previewImage" v-if="previewImage" style="max-width: 200px; max-height: 200px;">
+            <button type="submit">제출</button>
+        </form>
     </div>
-  </template>
+</template>
 
 <script>
 import axios from 'axios';
@@ -59,7 +60,14 @@ export default {
     },
 	methods: {
         onFileChange(e) {
-            this.goods_img = e.target.files[0];
+            //alert가 출력되어 확인을 눌렀을 때 브라우저에서 [Violation] 'change' handler took *ms 경고 발생하는데 alert 창이 켜져있었다는 수준의 경고이므로 무시해도 됨
+            const file = e.target.files[0];
+            if (file.size > 3 * 1024 * 1024) {
+                alert('용량이 3MB 이하인 파일만 업로드하실 수 있습니다.');
+                e.target.value = '';
+                return;
+            }
+            this.goods_img = file;
             this.previewImage = URL.createObjectURL(this.goods_img);
         },
         submitForm() {
@@ -172,11 +180,5 @@ export default {
 
 .text3:focus {
 	outline: none;
-}
-
-.loading {
-  background: transparent url('https://miro.medium.com/max/882/1*9EBHIOzhE1XfMYoKz1JcsQ.gif') center no-repeat;
-  height: 400px;
-  width: 400px;
 }
 </style>
