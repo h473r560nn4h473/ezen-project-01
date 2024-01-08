@@ -236,7 +236,9 @@ td {
 }
 
 .goods-img {
-    max-width: 50px;
-    height: auto;
+    max-width: 100px;
+    width: "50%";
+    max-height: 100px;
+    height: "50%";
 }
 </style>
