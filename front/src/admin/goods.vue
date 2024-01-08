@@ -42,9 +42,9 @@
                     <tr v-for="(goods, i) in pageGoodsList" :key="i">
                         <th scope="row" style="display: none;">{{ pageNum * onePageCnt + i + 1 }}</th>
                         <td>{{ goods.GOODS_NM }}</td>
-                        <img v-if="goods.GOODS_IMG && isImgHere(goods.GOODS_IMG)" :src="require(`../../../back/uploads/uploadGoods/${goods.GOODS_IMG}`)" class="goods-img">
-                        <img v-else-if="goods.GOODS_IMG" :src="require(`../assets/imgempty.png`)" class="goods-img">
-                        <img v-else :src="require(`../assets/imgempty.png`)" class="goods-img">
+                        <img v-if="goods.GOODS_IMG && isImgHere(goods.GOODS_IMG)" :src="require(`../../../back/uploads/uploadGoods/${goods.GOODS_IMG}`)" class="goods-img"> <!-- db에 goods_img 값이 있음 + 값과 일치하는 이름을 가진 파일이 존재함 -->
+                        <img v-else-if="goods.GOODS_IMG" :src="require(`../assets/imgempty.png`)" class="goods-img">    <!-- db에 goods_img 값이 있지만 파일은 존재하지 않음 -->
+                        <img v-else :src="require(`../assets/imgempty.png`)" class="goods-img"> <!-- 그 외의 모든 경우 -->
                         <td>{{ goods.GOODS_PRICE }}</td>
                         <td>{{ formatDateTime(goods.GOODS_DATE) }}</td>
                         <td><button class="btn btn-outline-danger" @click="modifyGoods(goods.GOODS_NO)">수정</button>&nbsp;<button class="btn btn-outline-danger" @click="deleteGoods(goods.GOODS_NO)">삭제</button></td>
@@ -138,7 +138,7 @@ export default {
         },
         isImgHere(fileName) {
             try {
-                require(`../../../back/uploads/uploadGoods/${fileName}`);
+                require(`../../../back/uploads/uploadGoods/${fileName}`);   //파일이 존재하는지 확인
                 return true;
             } catch (e) {
                 return false;
