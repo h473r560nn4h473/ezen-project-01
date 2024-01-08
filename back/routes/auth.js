@@ -38,6 +38,44 @@ router.post('/login_process', function (request, response) {
     })
 });
 
+// 네이버 로그인
+router.post('/naverlogin', function (request, response) {
+    const naverlogin = request.body.naverlogin;
+
+    //0717 23:26추가 네이버 중복 로그인 방지
+    db.query(sql.naver_id_check, [naverlogin.id], function (error, results, fields) {
+        if (error) {
+            console.log(error);
+            return response.status(500).json({
+                message: 'DB_error'
+            });
+        }
+        if (results.length > 0) {
+            // 가입된 계정 존재 
+            db.query(sql.get_user_no, [naverlogin.id], function (error, results, fields) {
+                if (error) {
+                    console.log(error)
+                }
+                return response.status(200).json({
+                    message: results[0].user_no
+                })
+            })
+        } else {
+            // DB에 계정 정보 입력 
+            db.query(sql.naverlogin, [naverlogin.id, naverlogin.nickname], function (error, result) {
+                if (error) {
+                    console.error(error);
+                    return response.status(500).json({ error: 'error' });
+                } else {
+                    return response.status(200).json({
+                        message: '저장완료'
+                    })
+                }
+            })
+        }
+    })
+})
+
 //회원가입
 router.post('/join_process', function (request, response) {
 

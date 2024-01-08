@@ -18,9 +18,10 @@
                 <button type="button" class="btn" @click="login()">로그인</button>
                 <br>
                     <img :src="require(`../assets/btn_kakao.png`)" class="btn_kakao"/>
-                    <img :src="require(`../assets/btn_naver.png`)" class="btn_naver"/> <!-- 로고 파일 크기를 카카오와 동일하게 축소함 -->
+                    <div id="naverIdLogin" @click="naverlogin" img src="../assets/naver.png"></div>
             </div>
             <div class="find" @click="goToFind()">아이디 / 비밀번호 찾기</div>
+            <div id="naverIdLogin"><button type="button" @click="logout">로그아웃</button></div>
         </div>
     </main>
 </template>
@@ -32,14 +33,46 @@ export default {
     data() {
         return {
             user_id: '',
+            naver_id: '',
             user_pw: '',
-            
+            naverLogin: [],
         };
     },
     computed: {
         user() {
             return this.$store.state.user; // user 정보가 바뀔 때마다 자동으로 user() 갱신
         },
+    },
+    mounted() {
+        console.log(this.naverLogin.user);
+        this.naverLogin = new window.naver.LoginWithNaverId({
+            clientId: "Jrr3D4v8TvCF6ZHpaHY5",
+            callbackUrl: "http://localhost:8080/login",
+            isPopup: false,
+            loginButton: {
+                color: "green", type: 1, height: 45,
+            },
+        });
+        //this.$store.commit("naverLogin", this.naverLogin);
+
+        this.naverLogin.init();
+
+        this.naverLogin.getLoginStatus((status) => {
+            if (status) {
+                console.log(status);
+                console.log(this.naverLogin.user.name);
+
+                const id = this.naverLogin.user.id;
+                const nickname = this.naverLogin.user.nickname;
+
+                this.naver_id = id;
+                console.log(nickname)
+
+            } else {
+                console.log("callback처리 실패");
+            }
+        });
+
     },
     methods: {
         login() {
@@ -77,6 +110,56 @@ export default {
         goToFind() {
             this.$router.push({ path: 'find' });
         },
+        naverlogin() {
+            console.log("로그인함수 실행됨")
+            axios({
+                url: "http://localhost:3000/auth/naverlogin",
+                method: "POST",
+                data: {
+                    naverlogin: this.naverLogin.user,
+
+                },
+            })
+                .then(res => {
+
+                    if (res.data.message == '저장완료') {
+
+                        this.$swal({
+                            icon: 'success',
+                            title: '회원가입 성공!',
+                            showConfirmButton: false,
+                            timer: 1500
+                        });
+
+
+
+                    } else {
+                        this.$store.commit("user", { user_id: this.naver_id, user_no: res.data.message })
+
+                        this.$swal({
+                            icon: 'success',
+                            title: '로그인 성공!',
+                            showConfirmButton: false,
+                            timer: 1500,
+
+                        }).then(() => {
+                            window.location.href = "http://localhost:8080";
+                        })
+
+
+                    }
+                })
+                .catch(err => {
+                    console.log(err);
+                })
+        },
+        logout() {
+    const accessToken = this.naverLogin.accessToken.accessToken;
+    const url = `https://nid.naver.com/oauth2.0/token?grant_type=delete&client_id=Jrr3D4v8TvCF6ZHpaHY5&client_secret=V7qbNtySkJ&access_token=${accessToken}&service_provider=NAVER`;
+    axios.get(url).then((res) => {
+        console.log(res.data);
+    });
+}
     },
 };
 </script>
@@ -204,12 +287,6 @@ input:focus {
     /* border: 1px solid red; */
 }
 
-#naverIdLogin {
-    left: 210px;
-    top: -30px;
-    position: relative;
-}
-
 .login-form .btn_kakao {
     margin-top: 5px;
     scale: 75%;
@@ -218,11 +295,11 @@ input:focus {
     top: 5px;
 }
 
-.login-form .btn_naver {
+/* .login-form .btn_naver {
     margin-top: 5px;
     scale: 75%;
     position: relative;
     left: 125px;
     top: 5px;
-}
+} */
 </style>

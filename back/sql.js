@@ -50,4 +50,7 @@ goods_check: `SELECT * FROM tb_goods WHERE goods_nm = ?`,
 get_goods_no: `SELECT goods_no FROM tb_goods WHERE goods_nm = ?`,
 delete_goods: `DELETE FROM tb_goods WHERE goods_nm = ?`,
 goods_img_check: `SELECT goods_img FROM tb_goods`,
+
+naverlogin: `INSERT INTO tb_user (user_id, user_nm, user_social_tp) VALUES (?, ?, 2)`,
+naver_id_check: `SELECT * FROM tb_user WHERE user_id = ?`,
 }

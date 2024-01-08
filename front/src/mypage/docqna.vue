@@ -1,7 +1,7 @@
 <template>
     <main class="mt-3">
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
-            integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous" />
+        <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+            integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous" /> -->
         <div class="container">
             <table class="table caption-top qnalist-table">
                 <caption>
@@ -14,12 +14,10 @@
                         </div>
                         <div class="list-title2">
                             <div class="dropdown">
-                                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1"
-                                    data-bs-toggle="dropdown" aria-expanded="false" style="border: none;"> {{ sortQCase }}
-                                </button>
-                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                    <li><a class="dropdown-item" href="#" @click="sortList(0)">최근 순</a></li>
-                                    <li><a class="dropdown-item" href="#" @click="sortList(1)">오래된 순</a></li>
+                                <button type="button" style="border: none;" @click="showDropdown">{{ sortQCase }}</button>
+                                <ul v-if="dropdownVisible">
+                                    <li style="list-style:none;"><a href="#" @click="sortList(0)">최근 순</a></li>
+                                    <li style="list-style:none;"><a href="#" @click="sortList(1)">오래된 순</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -71,6 +69,7 @@ export default {
     data() {
         return {
             qnaList: [],
+            dropdownVisible: false,
             sortQCase: "최근 순",
             keyword: '',
             pageQnaList: [],  // 한 페이지에 보여줄 굿즈 리스트를 잘라 담을 새 리스트
@@ -114,6 +113,9 @@ export default {
             } catch (error) {
                 console.error(error);
             }
+        },
+        showDropdown() {
+            this.dropdownVisible = !this.dropdownVisible;
         },
         sortList(sortNum) {
             if (sortNum == 0) {
