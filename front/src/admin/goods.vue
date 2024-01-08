@@ -42,8 +42,9 @@
                     <tr v-for="(goods, i) in pageGoodsList" :key="i">
                         <th scope="row" style="display: none;">{{ pageNum * onePageCnt + i + 1 }}</th>
                         <td>{{ goods.GOODS_NM }}</td>
-                        <td v-if="goods.GOODS_IMG"><img :src="require(`../../../back/uploads/uploadGoods/${goods.GOODS_IMG}`)" class="goods-img"></td>
-                        <td v-else><img :src="require(`../assets/imgempty.png`)" class="goods-img"></td>
+                        <img v-if="goods.GOODS_IMG && isImgHere(goods.GOODS_IMG)" :src="require(`../../../back/uploads/uploadGoods/${goods.GOODS_IMG}`)" class="goods-img">
+                        <img v-else-if="goods.GOODS_IMG" :src="require(`../assets/imgempty.png`)" class="goods-img">
+                        <img v-else :src="require(`../assets/imgempty.png`)" class="goods-img">
                         <td>{{ goods.GOODS_PRICE }}</td>
                         <td>{{ formatDateTime(goods.GOODS_DATE) }}</td>
                         <td><button class="btn btn-outline-danger" @click="modifyGoods(goods.GOODS_NO)">수정</button>&nbsp;<button class="btn btn-outline-danger" @click="deleteGoods(goods.GOODS_NO)">삭제</button></td>
@@ -133,6 +134,14 @@ export default {
 
             } catch (error) {
                 console.error(error);
+            }
+        },
+        isImgHere(fileName) {
+            try {
+                require(`../../../back/uploads/uploadGoods/${fileName}`);
+                return true;
+            } catch (e) {
+                return false;
             }
         },
         sortList(sortNum) {

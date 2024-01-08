@@ -196,7 +196,6 @@ export default {
                 if (result.value) {
                     this.deleteQna(qna);
                     this.$swal({
-                        position: 'top',
                         icon: 'success',
                         title: '삭제되었습니다',
                         showConfirmButton: false,
