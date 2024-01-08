@@ -49,4 +49,5 @@ add_image: `UPDATE tb_goods SET goods_img = ? WHERE goods_no = ?`,
 goods_check: `SELECT * FROM tb_goods WHERE goods_nm = ?`,
 get_goods_no: `SELECT goods_no FROM tb_goods WHERE goods_nm = ?`,
 delete_goods: `DELETE FROM tb_goods WHERE goods_nm = ?`,
+goods_img_check: `SELECT goods_img FROM tb_goods`,
 }

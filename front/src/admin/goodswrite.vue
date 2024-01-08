@@ -62,7 +62,11 @@ export default {
         onFileChange(e) {
             //alert가 출력되어 확인을 눌렀을 때 브라우저에서 [Violation] 'change' handler took *ms 경고 발생하는데 alert 창이 켜져있었다는 수준의 경고이므로 무시해도 됨
             const file = e.target.files[0];
-            if (file.size > 3 * 1024 * 1024) {
+            if (!file) {    //파일을 한번 첨부한 후 다시 파일첨부를 눌러 취소버튼을 누를 경우 size가 undefined로 변경되어 발생하는 에러를 처리하기 위함
+                console.log("파일첨부취소")
+                e.target.value = '';
+                return;
+            } else if (file.size > 3 * 1024 * 1024) {
                 alert('용량이 3MB 이하인 파일만 업로드하실 수 있습니다.');
                 e.target.value = '';
                 return;

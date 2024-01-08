@@ -18,16 +18,31 @@ const upload = multer({
 router.post('/admin/add_goods', upload.single('goods_img'), (req, res) => {
     const { goods_nm, goods_price } = req.body;
     const goods_img = req.file.buffer;
-    db.query(sql.goods_add, [goods_nm, goods_price], (err, result) => {
+    db.query(sql.goods_add, [goods_nm, goods_price], (err, result) => { //다른 값을 먼저 저장해서 goods_no 자동생성
         if (err) throw err;
-        const goods_no = result.insertId;
-        const date = new Date().toJSON().slice(0, 10);
-        const filename = `${date}_${goods_no}.${req.file.originalname.split('.').pop()}`;
+        const goods_no = result.insertId;   //자동생성된 goods_no를 전달받음
+        const date = new Date().toJSON().slice(0, 10);  //현재 날짜를 가져오고, 연-월-일 형식으로 변환
+        const filename = `${date}_${goods_no}.${req.file.originalname.split('.').pop()}`;   //파일 이름을 날짜_번호.원래확장자 형식으로 변환
         fs.writeFile(`${__dirname}` + `../../uploads/uploadGoods/${filename}`, goods_img, (err2) => {
             if (err2) throw err2;
             db.query(sql.add_image, [filename, goods_no], (err3) => {
                 if (err3) throw err3;
                 res.send('success');
+                db.query(sql.goods_img_check, (err4, rows) => { //상품사진 저장된 폴더 확인해서 goods_img 필드의 값과 일치하지 않는 파일이 있을 경우 삭제함
+                    if (err4) throw err4;
+                    const goodsImgs = rows.map((row) => row.goods_img);
+                    fs.readdir(`${__dirname}` + `../../uploads/uploadGoods/`, (err5, files) => {
+                        if (err5) throw err5;
+                        files.forEach((file) => {
+                            if (!goodsImgs.includes(file)) {
+                                fs.unlink(path.join(`${__dirname}` + `../../uploads/uploadGoods/`, file), (err6) => {
+                                    if (err6) throw err6;
+                                    console.log(`삭제된 파일: ${file}`);
+                                });
+                            }
+                        });
+                    });
+                });
             });
         });
     }, (error) => {
