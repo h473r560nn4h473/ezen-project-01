@@ -4,8 +4,131 @@ const db = require('../db.js');
 const sql = require('../sql.js');
 const bcrypt = require('bcrypt');  
 
+// admin/goods.vue
+// admin/goodsmodify.vue
+// admin/goodswrite.vue
+// admin/qna.vue
+// admin/reservation.vue
+// admin/review.vue
+// admin/userInfo.vue
+router.post("/admin_check", function (request, response) {
+    const loginUser = request.body;
+  
+    db.query(
+      sql.admin_check,
+      [loginUser.user_no],
+      function (error, results, fields) {
+        if (results[0].user_tp == 1) {
+          // 로그인한 유저의 TP가 1(관리자)인 경우
+          return response.status(200).json({
+            message: "admin",
+          });
+        } else {
+          return response.status(200).json({
+            message: "user",
+          });
+        }
+      }
+    );
+  });
 
-// 로그인 
+// views/login.vue
+router.post('/kakaoLoginProcess', function (request, response) {
+    const kakao = request.body;
+
+    // 데이터 없을 시 회원가입도 진행
+    db.query(sql.kakao_check, [kakao.user_id], function (error, results, fields) {
+        if (results.length <= 0) {
+            db.query(sql.kakaoJoin, [kakao.user_id, kakao.user_nm], function (error, result) {
+                if (error) {
+                    console.error(error);
+                    return response.status(500).json({ error: 'error' });
+                }
+                db.query(sql.get_user_no, [kakao.user_id], function (error, results, fields) {
+                    if (error) {
+                        console.log(error)
+                    }
+                    return response.status(200).json({
+                        message: results[0].user_no
+                    })
+                })
+            })
+        }
+        // 로그인 
+        else {
+        db.query(sql.get_user_no, [kakao.user_id], function (error, results, fields) {
+            if (error) {
+                console.log(error)
+            }
+            return response.status(200).json({
+                message: '로그인',
+                user: results[0].user_no
+            })
+        })
+        }
+    })
+});
+
+// views/login.vue
+router.post('/naverlogin', function (request, response) {
+    const naverlogin = request.body.naverlogin;
+    console.log(naverlogin.email);
+    console.log(naverlogin.nickname);
+
+    //0717 23:26추가 네이버 중복 로그인 방지
+    db.query(sql.naver_id_check, [naverlogin.email], function (error, results, fields) {
+        if (error) {
+            console.log(error);
+            return response.status(500).json({
+                message: 'DB_error'
+            });
+        }
+        if (results.length > 0) {
+            // 가입된 계정 존재 
+            db.query(sql.get_user_no, [naverlogin.email], function (error, results, fields) {
+                if (error) {
+                    console.log(error)
+                }
+                return response.status(200).json({
+                    message: results[0].user_no
+                })
+                
+            })
+        } else {
+            // DB에 계정 정보 입력 
+            db.query(sql.naverlogin, [naverlogin.email, naverlogin.nickname], function (error, result) {
+                if (error) {
+                    console.error(error);
+                    return response.status(500).json({ error: 'error' });
+                } 
+                db.query(sql.get_user_no, [naverlogin.email], function (error, results, fields) {
+                    if (error) {
+                        console.log(error)
+                    }
+                    return response.status(200).json({
+                        message: '로그인',
+                        user: results[0].user_no
+                    })
+                })     
+            })
+        }
+    })
+})
+
+// views/petupload.vue
+router.post('/petupload', function(request, response) {
+    const user = request.body;
+   
+    db.query(sql.petupload, [user.pet_no, user.pet_nm, user.pet_age, user.pet_sex, user.pet_type,user.user_no], function (error, result, fields) {
+        if (error) {
+            console.error(error);
+            return response.status(500).json({ error: 'petupload_error' });
+        }
+        return response.status(200).json({ message: 'petupload_update' });
+    });
+});
+
+// views/login.vue
 router.post('/login_process', function (request, response) {
     const loginUser = request.body;
 
@@ -38,45 +161,7 @@ router.post('/login_process', function (request, response) {
     })
 });
 
-// 네이버 로그인
-router.post('/naverlogin', function (request, response) {
-    const naverlogin = request.body.naverlogin;
-
-    //0717 23:26추가 네이버 중복 로그인 방지
-    db.query(sql.naver_id_check, [naverlogin.id], function (error, results, fields) {
-        if (error) {
-            console.log(error);
-            return response.status(500).json({
-                message: 'DB_error'
-            });
-        }
-        if (results.length > 0) {
-            // 가입된 계정 존재 
-            db.query(sql.get_user_no, [naverlogin.id], function (error, results, fields) {
-                if (error) {
-                    console.log(error)
-                }
-                return response.status(200).json({
-                    message: results[0].user_no
-                })
-            })
-        } else {
-            // DB에 계정 정보 입력 
-            db.query(sql.naverlogin, [naverlogin.id, naverlogin.nickname], function (error, result) {
-                if (error) {
-                    console.error(error);
-                    return response.status(500).json({ error: 'error' });
-                } else {
-                    return response.status(200).json({
-                        message: '저장완료'
-                    })
-                }
-            })
-        }
-    })
-})
-
-//회원가입
+// views/join2.vue
 router.post('/join_process', function (request, response) {
 
     const user = request.body;
@@ -103,7 +188,7 @@ router.post('/join_process', function (request, response) {
     })
 });
 
-//아이디중복확인
+// views/join2.vue
 router.post('/idcheck', function (request, response) {
     const user = request.body;
 
@@ -121,82 +206,7 @@ router.post('/idcheck', function (request, response) {
     })
 });
 
-// 관리자 체크 
-router.post('/admin_check', function (request, response) {
-    const loginUser = request.body;
-
-    db.query(sql.admin_check, [loginUser.user_no], function (error, results, fields) {
-        if (results[0].user_tp == 1) {
-            // 로그인한 유저의 TP가 1(관리자)인 경우
-            return response.status(200).json({
-                message: 'admin'
-            })
-        }
-        else {
-            return response.status(200).json({
-                message: 'user'
-            })
-        }
-    })
-})
-
-function sortCaseReplace(sortCase) {
-    let order = ` ORDER BY user_no DESC`; // 최근 가입 순
-    if (sortCase == 1) { // 오래된 가입 순
-        order = ` ORDER BY user_no`;
-    }
-    return order;
-}
-
-// 회원리스트
-router.get('/admin/userlist/:sortCase/:keyword', function (request, response, next) {
-
-    const sortCase = request.params.sortCase;
-    const keyword = request.params.keyword;
-    let search = '';
-
-    if (keyword != 'none') {
-        search = ' AND user_id Like "%' + keyword + '%" ';
-    }
-
-    const arrange = sortCaseReplace(sortCase);
-
-    db.query(sql.userlist + search + arrange, function (error, results, fields) {
-        if (error) {
-            console.error(error);
-            return response.status(500).json({ error: '회원리스트에러' });
-        }
-        response.json(results);
-    });
-});
-
-// 회원 삭제
-router.delete('/admin/userlist/:user_no', function (request, response, next) {
-    const userNo = request.params.user_no;
-
-    db.query(sql.deleteUser, [userNo], function (error, result, fields) {
-        if (error) {
-            console.error(error);
-            return response.status(500).json({ error: '회원삭제에러' });
-        }
-        return response.status(200).json({ message: '회원삭제성공' });
-    });
-});
-
-// 관리자_동물정보
-router.get('/admin/getPetData/:user_no', function (request, response, next) {
-    const user_no = request.params.user_no;
-
-    db.query(sql.pet_info, [user_no], function (error, results, fields) {
-        if (error) {
-            console.error(error);
-            return response.status(500).json({ error: '동물정보에러' });
-        }
-        response.json(results);
-    });
-});
-
-// 아이디 찾기
+// views/find.vue
 router.post('/findId', function (request, response, next) {
     const user_ph = request.body.user_ph;
 
@@ -221,19 +231,25 @@ router.post('/findId', function (request, response, next) {
 
 // 임시 비밀번호
 function generateTempPassword() {
-    const length = 8; // 임시 비밀번호의 길이
-    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    const length = 3; // 임시 비밀번호의 길이
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+    const integers = '0123456789';
+    const spcharacters = ['!', '@', '#', '$', '%', '^', '&', '*', '(', ')'];
+    let tempPass= [];
     let tempPassword = '';
 
     for (let i = 0; i < length; i++) {
-        const randomIndex = Math.floor(Math.random() * characters.length);
-        tempPassword += characters[randomIndex];
+        const randomIndex1 = Math.floor(Math.random() * characters.length);
+        const randomIndex2 = Math.floor(Math.random() * integers.length);
+        const randomIndex3 = Math.floor(Math.random() * spcharacters.length);
+        tempPass[i] = characters[randomIndex1] + integers[randomIndex2] + spcharacters[randomIndex3];
+        tempPassword += tempPass[i];
     }
 
     return tempPassword;
 }
 
-// 비밀번호 찾기
+// views/find.vue
 router.post('/findPw', function (request, response, next) {
     const user_id = request.body.user_id;
     const user_ph = request.body.user_ph;
@@ -264,6 +280,159 @@ router.post('/findPw', function (request, response, next) {
             });
         });
 
+    });
+});
+
+
+//의료진 체크
+router.post('/doc_check', function (request, response) {
+    const loginUser = request.body;
+
+    db.query(sql.doc_check, [loginUser.user_id], function (error, results, fields) {
+        if (results.length <= 0) {
+            return response.status(200).json({
+                message: 'user'
+            })
+        }
+        else {
+            return response.status(200).json({
+                message: 'doc'
+            })
+        }
+    })
+});
+
+// views/docSelect.vue
+// views/qnawrite.vue
+router.get('/getDocData', function (request, response, next) {
+
+    db.query(sql.doc_info, function (error, results, fields) {
+        if (error) {
+            console.error(error);
+            return response.status(500).json({ error: '정보에러' });
+        }
+        response.json(results);
+    });
+});
+
+// admin/userInfo.vue
+router.get('/getDocData2', function (request, response, next) {
+
+    db.query(sql.all_doc_info, function (error, results, fields) {
+        if (error) {
+            console.error(error);
+            return response.status(500).json({ error: '정보에러' });
+        }
+        response.json(results);
+    });
+});
+
+//펫 번호 리스트 갖고 오기
+router.get('/getPetNo', function (request, response, next) {
+
+    db.query(sql.petno_list, function (error, results, fields) {
+        if (error) {
+            console.error(error);
+            return response.status(500).json({ error: '정보에러' });
+        }
+        response.json(results);
+    });
+});
+
+// views/calendar.vue
+router.get('/getPetNo/:user_no', function (request, response, next) {
+    const user_no = request.params.user_no;
+
+    db.query(sql.get_pet_no, [user_no], function (error, results, fields) {
+        if (error) {
+            console.error(error);
+            return response.status(500).json({ error: '회원에러' });
+        }
+        response.json(results);
+    });
+});
+
+// views/calendar.vue
+router.get('/getDocId/:doc_nm', function (request, response, next) {
+    const doc_nm = request.params.doc_nm;
+
+    db.query(sql.get_doc_id, [doc_nm], function (error, results, fields) {
+        if (error) {
+            console.error(error);
+            return response.status(500).json({ error: '정보에러' });
+        }
+        response.json(results);
+    });    
+        
+});
+
+
+
+function sortCaseReplace(sortCase) {
+    let order = ` ORDER BY user_no DESC`; // 최근 가입 순
+    if (sortCase == 1) { // 오래된 가입 순
+        order = ` ORDER BY user_no`;
+    }
+    return order;
+}
+
+// admin/userInfo.vue
+router.get('/admin/userlist/:sortCase/:keyword', function (request, response, next) {
+
+    const sortCase = request.params.sortCase;
+    const keyword = request.params.keyword;
+    let search = '';
+
+    if (keyword != 'none') {
+        search = ' AND user_id Like "%' + keyword + '%" ';
+    }
+
+    const arrange = sortCaseReplace(sortCase);
+
+    db.query(sql.userlist + search + arrange, function (error, results, fields) {
+        if (error) {
+            console.error(error);
+            return response.status(500).json({ error: '회원리스트에러' });
+        }
+        response.json(results);
+    });
+});
+
+// admin/userInfo.vue
+router.delete('/admin/userlist/:user_no', function (request, response, next) {
+    const userNo = request.params.user_no;
+
+    db.query(sql.deleteUser, [userNo], function (error, result, fields) {
+        if (error) {
+            console.error(error);
+            return response.status(500).json({ error: '회원삭제에러' });
+        }
+        return response.status(200).json({ message: '회원삭제성공' });
+    });
+});
+
+// admin/userInfo.vue
+router.get('/admin/getPetData/:user_no', function (request, response, next) {
+    const user_no = request.params.user_no;
+
+    db.query(sql.admin_pet_info, [user_no], function (error, results, fields) {
+        if (error) {
+            console.error(error);
+            return response.status(500).json({ error: '동물정보에러' });
+        }
+        response.json(results);
+    });
+});
+
+// views/docHistory.vue
+router.get('/dochistory', function (request, response) {
+
+    db.query(sql.get_dochis, function (error, results) {
+        if (error) {
+            console.error(error);
+            return response.status(500).json({ error: '에러' });
+        }
+        response.json(results);
     });
 });
 

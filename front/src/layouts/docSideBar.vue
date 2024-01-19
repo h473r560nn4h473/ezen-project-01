@@ -1,105 +1,135 @@
 <template>
-    <div>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-        <div class="icon-bar admin-bar">
-            <i></i>
-            <router-link to="/">
-                <i class="fa fa-home"></i>
-                <p>홈페이지</p>
-            </router-link> 
-            <router-link to="/mypage/docreview">
-                <i class="fa fa-user-circle"></i>
-                <p>진료 기록 관리</p>
-            </router-link>    
-            <router-link to="/mypage/docqna">
-                <i class="fa fa-question"></i>
-                <p>QnA 답변</p>
-            </router-link>
-            <router-link to="/mypage/docreservation">
-                <i class="fa fa-user-circle"></i>
-                <p>예약 관리</p>
-            </router-link>
-            <router-link to="/mypage/docmodify">
-                <i class="fa fa-user-circle"></i>
-                <p>정보수정</p>
-            </router-link>
-            <br />
-            <button type="button" class="big_red_btn" @click="logout">로그아웃</button>
+  <body>
+    <div class="sidebar_wrap">
+      <div class="sidebar">
+        <div class="menu" :class="{ 'active': currentPath === '/docpage' || currentPath.includes('/docpage/docupdate'), 'clickable': currentPath !== '/docpage' }" @click="handleClick('/docpage')">
+          <div class="icon_wrap">
+            <i class="fa-solid fa-user-pen"></i>
+            <p>회원 정보</p>
+          </div>  
         </div>
+        <div class="line"></div>
+        <div class="menu" :class="{ 'active': currentPath.includes('/docpage/docreservation'), 'clickable': currentPath !== '/docpage/docreservation' }" @click="handleClick('/docpage/docreservation')">
+          <div class="icon_wrap">
+            <i class="fa-solid fa-calendar-days"></i>
+            <p>예약 내역</p>
+          </div>  
+        </div>
+        <div class="line"></div>
+        <div class="menu" :class="{ 'active': currentPath.includes('/docpage/docreview'), 'clickable': currentPath !== '/docpage/docreview' }" @click="handleClick('/docpage/docreview')">
+          <div class="icon_wrap">
+            <i class="fa-solid fa-file-medical"></i>
+            <p>진료 후기</p>
+          </div>  
+        </div>
+        <div class="line"></div>
+        <div class="menu" :class="{ 'active': currentPath.includes('/docpage/docqna'), 'clickable': currentPath !== '/docpage/docqna' }" @click="handleClick('/docpage/docqna')">
+          <div class="icon_wrap">
+            <i class="fa-solid fa-circle-question"></i>
+            <p>문의 내역</p>
+          </div>  
+        </div>
+      </div>
+      
     </div>
+  </body>
 </template>
 <script>
-
 export default {
-    computed: {
-        user() {
-            return this.$store.state.user;
-        }
-    },
-    methods: {
-        logout() {
-            this.$store.commit("user", {});
-            this.$swal({
-                position: 'top',
-                icon: 'success',
-                title: '로그아웃되셨습니다.',
-                showConfirmButton: false,
-                timer: 1000
-            })
-            .then(() => {
-                window.location.href = "http://localhost:8080";
-            })
-        }
+  data() {
+    return {
+      currentPath: this.$route.path
     }
+  },
+  watch: {
+    '$route'(to) {
+      this.currentPath = to.path
+    }
+  },
+  methods: {
+    handleClick(path) {
+      if (!this.$el.classList.contains('active') && this.currentPath !== path) {
+        this.$router.push({ path: path })
+      }
+    }
+  }
 }
 </script>
-<style>
+<style scoped>
+@import "../assets/css/global.css";
 
-.big_red_btn {
-	font-size: 14px;
-	width: 80px;
-	height: 50px;
-	background-color: red;
-	border: none;
-	border-radius: 4px;
-	margin: 0 auto;
-    display:block;
+* {
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Safari */
+  -ms-user-select: none; /* 인터넷익스플로러 */
+  user-select: none;
 }
 
-.admin-bar p {
-    margin: auto;
-    font-size: 14px;
+.sidebar_wrap {
+  width: 100px;
 }
 
-.admin-bar {
-    height: 100%;
-    width: 100px;
-    background-color: #555;
-    position: fixed; 
-    /*z-index: 1;*/ /* Stay on top */
-    top: 0; /* Stay at the top */
-    left: 0;
-    overflow-x: hidden; /* Disable horizontal scroll */
-  }
+.sidebar {
+  border-radius: 20px;
+  background: linear-gradient(140deg, #ffead5, var(--color-lightorange));
+  box-shadow: 0 0 28px -7px var(--color-lightorange);
+  border: 1px solid var(--color-white);
+}
 
-  .admin-bar a {
-    display: block;
-    text-align: center;
-    padding-top: 18px;
-    padding-bottom: 18px;
-    transition: all 0.3s ease;
-    color: white;
-    text-decoration: none;
-    font-size: 18px;
-  }
+.menu {
+  width: 100px;
+  height: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  color: var(--color-dark);
+}
 
+.menu:first-child {
+  border-radius: 20px 20px 0 0;
+}
 
-  .admin-bar a:hover {
-    background-color: #858585;
-  }
+.menu:last-child {
+  border-radius: 0 0 20px 20px;
+}
 
-  .active {
-    background-color: #5eaf13;
-  }
+.menu.active .icon_wrap,
+.menu:hover .icon_wrap {
+  background: linear-gradient(140deg, var(--color-lightorange), var(--color-orange));
+  color: var(--color-white);
+  box-shadow: 0 0 15px -3px var(--color-orange);
+  transition: all 0.2s ease-out;
+}
 
+.menu.active {
+  cursor: initial;
+}
+
+.menu.active.clickable {
+  cursor: pointer;
+}
+
+.icon_wrap {
+  padding: 10px;
+  width: fit-content;
+  border-radius: 5px;
+  text-align: center;
+}
+
+i.fa-solid {
+  font-size: var(--font-medium);
+  margin-bottom: 5px;
+}
+
+.menu p {
+  margin-bottom: 0;
+}
+
+.line {
+  margin: 0 auto 1px;
+  height: 1px;
+  background-color: var(--color-white);
+  width: 70px;
+}
 </style>

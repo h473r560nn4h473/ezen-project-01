@@ -1,56 +1,105 @@
 <template>
-  <main class="mt-3">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
-      integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous" />
+  <main>
     <div class="container">
       <table class="table caption-top">
         <caption>
-          <div class="list-title">
-            <h2>회원 관리</h2><br>
-            <div class="list-title2">
+          <div class="top_wrap">
+            <h1>회원 관리</h1>
+            <div class="search_wrap">
               <div class="search_bar">
-                <input v-model="keyword" class="form-control me-2" type="text" placeholder="아이디 검색"
-                  @keyup.enter="getUserList(sortCase)">
-                <button class="btn btn-secondary" type="submit" @click="getUserList(sortCase)"><i class="fa fa-search"></i></button>
+                <input v-model="keyword" class="form-control me-2" type="text" placeholder="아이디 검색" @keyup.enter="getUserList(sortCase)">
+                <button class="btn btn-secondary" type="submit" @click="getUserList(sortCase)"><i class="fa-solid fa-search"></i></button>
               </div>
-              <div class="list-title2">
+              <div class="dropdown_wrap">
                 <div class="dropdown">
-                  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1"
-                    data-bs-toggle="dropdown" aria-expanded="false" style="border: none;"> {{ sortCase }}
-                  </button>
-                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                      <li><a class="dropdown-item" href="#" @click="sortList(0)">최근 가입 순</a></li>
-                      <li><a class="dropdown-item" href="#" @click="sortList(1)">오래된 가입 순</a></li>
-                    </ul>
+                  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">{{ sortCase }}</button>
+                  <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                    <li><a class="dropdown-item" href="#" @click="sortList(0)">최근 가입 순</a></li>
+                    <li><a class="dropdown-item" href="#" @click="sortList(1)">오래된 가입 순</a></li>
+                  </ul>
                 </div>
               </div>
             </div>
           </div>
         </caption>
-        <thead class="table-light">
+        <thead>
           <tr>
-            <th scope="col" style="display: none;">번호</th>
+            <th scope="col">번호</th>
             <th scope="col">번호</th>
             <th scope="col">아이디</th>
             <th scope="col">이름</th>
             <th scope="col">연락처</th>
             <th scope="col">가입타입</th>
-            <th scope="col">동물정보</th>
-            <th scope="col"> </th>
+            <th scope="col">상세정보</th>
+            <th scope="col"></th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="(user, i) in pageUserList" :key="i">
-            <th scope="row" style="display: none;">{{ pageNum * onePageCnt + i + 1 }}</th>
+            <th scope="row">{{ pageNum * onePageCnt + i + 1 }}</th>
             <td>{{ user.user_no }}</td>
             <td>{{ formatLongID(user.user_id) }}</td>
             <td>{{ user.user_nm }}</td>
             <td>{{ user.user_ph }}</td>
             <td>{{ getSocialType(user.user_social_tp) }}</td>
-            <td>
-              <template v-if="user.pet_no === 0">
-                -
-              </template>
+            <td >
+              <template v-if="user.user_id == docId1 || user.user_id == docId2">
+                <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#exampleModal2" >의사 정보</button>
+                <!-- 모달 -->
+                <div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">의사 정보 확인</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">
+                        <div class="modal-body">
+                          <div v-if="user.user_id == docId1" class="card">
+                            <div class="card_wrap">
+                              <div class="img_col">
+                                <div class="img_frame">
+                                  <img :src="require(`../assets/doc1.png`)" alt="...">
+                                </div>
+                              </div>
+                              <div class="body_col">
+                                <div class="card-body">
+                                  <p class="card-text"><span class="bar"></span>의사 이름: {{ docInfo[0].DOC_NM }}</p>
+                                  <p class="card-text"><span class="bar"></span>의사 나이: {{ docInfo[0].DOC_AGE }}</p>
+                                  <p class="card-text"><span class="bar"></span>의사 전화번호: {{ docInfo[0].DOC_PH }}</p>
+                                  <p class="card-text"><span class="bar"></span>의사 이메일: {{ docInfo[0].DOC_EML }}</p>
+                                  <p class="card-text"><span class="bar"></span>의사 경력: {{ formatDateTime(docInfo[0].HIS_START_YEAR) }} ~ </p>
+                                </div>
+                              </div>
+                            </div>
+                          </div>  
+                          <div v-else class="card">
+                            <div class="card_wrap">
+                              <div class="img_col">
+                                <div class="img_frame">
+                                  <img :src="require(`../assets/doc2.png`)" alt="...">
+                                </div>
+                              </div>
+                              <div class="body_col">
+                                <div class="card-body">
+                                  <p class="card-text"><span class="bar"></span>의사 이름: {{ docInfo[1].DOC_NM }}</p>
+                                  <p class="card-text"><span class="bar"></span>의사 나이: {{ docInfo[1].DOC_AGE }}</p>
+                                  <p class="card-text"><span class="bar"></span>의사 전화번호: {{ docInfo[1].DOC_PH }}</p>
+                                  <p class="card-text"><span class="bar"></span>의사 이메일: {{ docInfo[1].DOC_EML }}</p>
+                                  <p class="card-text"><span class="bar"></span>의사 경력: {{ formatDateTime(docInfo[1].HIS_START_YEAR) }} ~ </p>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- 모달끝! -->
+              </template> 
               <template v-else>
                 <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal"
                   data-bs-target="#exampleModal" @click="viewPetInfo(user)">
@@ -62,28 +111,30 @@
                   <div class="modal-dialog">
                     <div class="modal-content">
                       <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="exampleModalLabel" style="color:#FFAF7D;">동물 정보 확인</h1>
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">동물 정보 확인</h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                       </div>
                       <div class="modal-body">
                         <div class="modal-body">
-                          <div class="card mb-3" style="max-width: 540px;">
-                            <div class="row g-0">
-                              <div v-if="pet.pet_img" class="col-md-4">
-                                <img :src="require(`../../../back/uploads/uploadPet/${pet.pet_img}`)" alt="..."
-                                  style="max-width: 100%; margin: 20px 0px 20px 10px; border-radius:100%">
+                          <div class="card">
+                            <div class="card_wrap">
+                              <div v-if="pet.pet_img" class="img_col">
+                                <div class="img_frame">
+                                  <img :src="require(`../../../back/uploads/uploadPet/${pet.pet_img}`)" alt="...">
+                                </div>
                               </div>
-                              <div v-else class="col-md-4">
-                                <img :src="require(`../assets/imgempty.png`)" class="img-fluid rounded-start" alt="..."
-                                  style="max-width: 100%; margin: 20px 0px 20px 10px">
+                              <div v-else class="img_col">
+                                <div class="img_frame">
+                                  <img :src="require(`../assets/imgempty.svg`)" alt="null">
+                                </div>
                               </div>
-                              <div class="col-md-8">
+                              <div class="body_col">
                                 <div class="card-body">
-                                  <p class="card-text">동물등록번호: {{ pet.pet_no }}</p>
-                                  <p class="card-text">동물 이름: {{ pet.pet_nm }}</p>
-                                  <p class="card-text">동물 종류: {{ pet.pet_type }}</p>
-                                  <p class="card-text">동물 연령: {{ pet.pet_age }}</p>
-                                  <p class="card-text">동물 성별: {{ getPetSex(pet.pet_sex) }}</p>
+                                  <p class="card-text"><span class="bar"></span>동물등록번호: {{ pet.pet_no }}</p>
+                                  <p class="card-text"><span class="bar"></span>동물 이름: {{ pet.pet_nm }}</p>
+                                  <p class="card-text"><span class="bar"></span>동물 종류: {{ pet.pet_type }}</p>
+                                  <p class="card-text"><span class="bar"></span>동물 연령: {{ pet.pet_age }}</p>
+                                  <p class="card-text"><span class="bar"></span>동물 성별: {{ getPetSex(pet.pet_sex) }}</p>
                                 </div>
                               </div>
                             </div>
@@ -123,12 +174,15 @@ export default {
     return {
       userList: [],
       pet: [],
+      docInfo: [],
       sortCase: "최근 가입 순",
       keyword: '',
       pageUserList: [],
       pageNum: 0,
       pageCnt: 0,
       onePageCnt: 10,
+      docId1: '',
+      docId2: ''
     };
   },
   computed: {
@@ -139,7 +193,10 @@ export default {
   mounted() {
     if (this.user.user_no == '') {
       // 일단은 로그인 상태 체크 
-      this.$swal("관리자 외 접근제한 페이지입니다.");
+      this.$swal({
+        icon: 'warning',
+        title: '관리자 외 접근제한 페이지입니다.'
+      })
       this.$router.push({ path: '/login' });
     }
     else {
@@ -154,39 +211,45 @@ export default {
           console.log(res.data.message);
         }
         else if (res.data.message == 'user') {
-          this.$swal("관리자 외 접근제한 페이지입니다.");
+          this.$swal({
+            icon: 'warning',
+            title: '관리자 외 접근제한 페이지입니다.'
+          })
           this.$router.push({ path: '/' });
         }
       }).catch(() => {
-        this.$swal("접속 오류");
+        this.$swal({
+          icon: 'error',
+          title: '접속 오류'
+        })
       })
     }
+    this.getDocDate()
   },
   created() {
-    this.getUserList();
+    this.getUserList()
   },
   methods: {
     setPage(page) {
-      this.pageUserList = []
+      this.pageUserList = [];
       this.pageNum = page - 1;
       this.sliceList()
     },
     sliceList() {
-      const start = 0 + this.pageNum * this.onePageCnt
+      const start = 0 + this.pageNum * this.onePageCnt;
       this.pageUserList = this.userList.slice(start, start + this.onePageCnt);
+      //console.log(this.pageUserList);
     },
     async getUserList(sortCaseNum) {
-      let keyword = 'none'
-
+      let keyword = 'none';
       if (this.keyword != '') {
-        keyword = this.keyword;
+        keyword = this.keyword
       }
       try {
         const response = await axios.get(`http://localhost:3000/auth/admin/userlist/${sortCaseNum}/${keyword}`);
         this.userList = response.data;
-        this.pageCnt = Math.ceil(this.userList.length / this.onePageCnt)
+        this.pageCnt = Math.ceil(this.userList.length / this.onePageCnt);
         this.setPage(1)
-
       } catch (error) {
         console.error(error);
       }
@@ -215,7 +278,12 @@ export default {
     },
     formatDateTime(dateTime) {
       const date = new Date(dateTime);
-      const formattedDateTime = date.toLocaleString('ko-KR');
+      const options = {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      };
+      const formattedDateTime = date.toLocaleDateString("ko-KR", options);
       return formattedDateTime;
     },
     confirmDeleteUser(user) {
@@ -224,19 +292,17 @@ export default {
         icon: 'question',
         showCancelButton: true,
         confirmButtonText: '삭제',
-        cancelButtonText: '취소',
-        reverseButtons: true
+        cancelButtonText: '취소'
       }).then(result => {
         if (result.value) {
           this.deleteUser(user);
           this.$swal({
-            position: 'top',
             icon: 'success',
             title: '삭제되었습니다',
             showConfirmButton: false,
             timer: 1500
           })
-          .then(() => {
+            .then(() => {
               this.$router.go(this.$router.currentRoute);
             }
           )
@@ -261,10 +327,9 @@ export default {
       }
     },
     async viewPetInfo(user) {
-      console.log(user);
       try {
         const response = await axios.get(`http://localhost:3000/auth/admin/getPetData/${user.user_no}`);
-        console.log('동물 데이터:', response.data);
+        //console.log('동물 데이터:', response.data);
         this.pet = response.data[0];
       } catch (error) {
         console.error('데이터 가져오기실패:', error);
@@ -277,36 +342,73 @@ export default {
         return shortId;
       }
       return id;
+    },
+    async getDocDate() {
+      try {
+        const response = await axios.get("http://localhost:3000/auth/getDocData2");
+        this.docInfo = response.data;
+        console.log(this.docInfo);
+        this.docId1 = response.data[0].DOC_ID;
+        this.docId2 = response.data[1].DOC_ID;
+        console.log(this.docId1);
+        console.log(this.docId2);
+      } catch(error) {
+        console.error(error);
+      }
     }
   }
-};
+}
 </script>
-
+<style src="../assets/css/admin.css" scoped></style>
 <style scoped>
+@import "../assets/css/global.css";
 
-th,
-td {
-  text-align: center;
-  vertical-align: middle;
-}
-.list-title {
-    margin: 13px 0px;
-    display: flex;
-    justify-content: space-between;
-}
-
-.list-title2 {
-    vertical-align: middle;
-    display: inline-flex;
-    margin: auto 0px;
+.modal-dialog {
+  max-width: none;
+  width: 100%;
+  height: 100vh;
+  margin: 0;
+  position: relative;
+  overflow: hidden;
 }
 
-.btn-area button {
-    margin: 0px 2px;
+.modal-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: block;
+  width: fit-content;
 }
 
-.search_bar {
+.modal-header {
+  padding: 1rem 1.5rem;
+}
+
+.modal-title {
+  color: var(--color-orange);
+}
+
+.card_wrap {
   display: flex;
-  margin: 0px 2px;
+}
+
+.img_col {
+  width: 240px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.img_frame {
+  width: 150px;
+  height: 150px;
+}
+
+.card-body {
+  text-align: left;
+  margin: 20px 0;
+  padding: 0 40px;
+  border-left: 1px solid var(--color-lightgray);
 }
 </style>

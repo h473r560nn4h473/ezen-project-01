@@ -1,0 +1,35 @@
+.top_wrap {
+	padding-bottom: 30px;
+	border-bottom: 1px solid var(--color-lightgray);
+	margin-bottom: 30px;
+}
+
+.top {
+	font-size: 20px;
+	font-weight: 500;
+}
+
+.content_wrap {
+	width: 100%;
+	margin-bottom: 30px;
+}
+
+.content_wrap th {
+	text-align: left;
+	font-weight: 500;
+	padding: 0 40px 30px 0;
+	vertical-align: top;
+	width: 0;
+	white-space: nowrap;
+}
+
+.content_wrap td {
+	padding-bottom: 30px;
+	vertical-align: top;
+}
+
+.img_wrap {
+	display: flex;
+	justify-content: left;
+	margin-bottom: 30px;
+}

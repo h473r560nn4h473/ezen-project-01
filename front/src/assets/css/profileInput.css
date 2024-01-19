@@ -1,0 +1,236 @@
+.input_row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.input_row .item {
+  font-size: var(--font-emp);
+  width: 200px;
+  pointer-events: none;
+}
+
+.input_row input:not([type=radio]):not([type=checkbox]):not([type=file]),
+.input_wrap input:not([type=radio]):not([type=checkbox]):not([type=file]):not(:disabled),
+.input_row textarea,
+.input_wrap textarea,
+.input_row select,
+.input_wrap select {
+  border: 1px solid var(--color-dark);
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: var(--font-regular);
+}
+
+.input_row input:not([type=radio]):not([type=checkbox]):not([type=file]):not(:disabled),
+.input_wrap input:not([type=radio]):not([type=checkbox]):not([type=file]):not(:disabled),
+.input_row select,
+.input_wrap select {
+  border-radius: 25px;
+  height: 50px;
+  padding: 0 20px;
+}
+
+.input_row input:not([type=radio]):not([type=checkbox]):not([type=file]):disabled,
+.input_wrap input:not([type=radio]):not([type=checkbox]):not([type=file]):disabled,
+.input_row textarea:disabled,
+.input_wrap textarea:disabled {
+  border: none;
+  padding: 0;
+  color: var(--color-dark);
+  background-color: transparent;
+}
+
+.input_row textarea:disabled,
+.input_wrap textarea:disabled {
+  resize: none;
+  height: fit-content !important;
+}
+
+.input_row select,
+.input_wrap select {
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+  position: relative;
+}
+
+.input_row textarea:not(:disabled),
+.input_wrap textarea:not(:disabled) {
+  border-radius: 12px;
+  padding: 20px;
+  height: 300px;
+  resize: none;
+  overflow-y: scroll;
+  word-break: keep-all;
+  cursor: auto;
+  background-color: transparent;
+}
+
+.input_row textarea:not(:disabled)::-webkit-scrollbar,
+.input_wrap textarea:not(:disabled)::-webkit-scrollbar {
+  width: 10px;
+}
+
+.input_row textarea:not(:disabled)::-webkit-scrollbar-button,
+.input_wrap textarea:not(:disabled)::-webkit-scrollbar-button {
+  height: 5px;
+}
+
+.input_row textarea:not(:disabled)::-webkit-scrollbar-thumb,
+.input_wrap textarea:not(:disabled)::-webkit-scrollbar-thumb {
+  background-color: #999;
+  border-radius: 5px;
+}
+
+.input_row textarea:not(:disabled)::-webkit-scrollbar-thumb:hover,
+.input_wrap textarea:not(:disabled)::-webkit-scrollbar-thumb:hover {
+  background-image: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2));
+}
+
+.input_row input:not([type=radio]):not([type=checkbox]):not([type=file]):not(:disabled):focus,
+.input_wrap input:not([type=radio]):not([type=checkbox]):not([type=file]):not(:disabled):focus,
+.input_row textarea:not(:disabled):focus,
+.input_wrap textarea:not(:disabled):focus,
+.input_row select:focus,
+.input_wrap select:focus {
+  border: 1px solid var(--color-orange);
+  outline: none;
+  box-shadow: 0 0 15px -3px var(--color-lightorange);
+}
+
+.input_row input[type=date],
+.input_wrap input[type=date] {
+  position: relative;
+  line-height: 1;
+  text-align: center;
+}
+
+.input_row input[type=date]::-webkit-calendar-picker-indicator,
+.input_wrap input[type=date]::-webkit-calendar-picker-indicator {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  background: transparent;
+  color: transparent;
+  cursor: pointer;
+  line-height: 1;
+}
+
+input[type=checkbox] {
+  display: none;
+}
+
+input[type=checkbox] + label {
+  display: block;
+  width: 40px;
+  height: 40px;
+  border-radius: 20px;
+  position: relative;
+  cursor: pointer;
+}
+
+input[type=checkbox] + label::after {
+  content: "\f3c1";
+  font-family: FontAwesome;
+  font-size: 20px;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  color: var(--color-dark);
+}
+
+input[type=checkbox]:hover + label::after {
+  color: var(--color-orange);
+}
+
+input[type=checkbox]:checked + label {
+  border: 1px solid var(--color-orange);
+  box-shadow: 0 0 15px -3px var(--color-lightorange);
+  background-color: var(--color-orange);
+}
+
+input[type=checkbox]:checked + label::after {
+  content: "\f023";
+  font-family: Fontawesome;
+  font-size: 20px;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  color: var(--color-white);
+}
+
+input[type=file] {
+  display: none;
+}
+
+input[type=file] + label {
+  display: block;
+  width: 100px;
+  height: 30px;
+  border-radius: 12px;
+  position: relative;
+}
+
+input[type=file] + label::after {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100px;
+  height: 30px;
+  font-size: 12px;
+}
+
+.warning_row {
+  margin-top: 1px;
+  margin-bottom: 4px;
+  width: 100%;
+  display: flex;
+  justify-content: right;
+}
+
+.warning.active {
+  color: var(--color-red);
+}
+
+.warning:not(.active) {
+  color: transparent;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.radio_wrap {
+  width: 400px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+}
+
+.radio_box {
+  display: block;
+  width: 50%;
+}
+
+.radio_sex {
+  font-size: var(--font-emp);
+  display: flex;
+  justify-content: left;
+  align-items: center;
+  width: 60px;
+  cursor: pointer;
+}
+
+.radio_sex input[type="radio"] {
+  margin-right: 5px;
+}
+
+.radio_sex span {
+  margin-bottom: 3px;
+}

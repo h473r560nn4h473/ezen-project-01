@@ -1,8 +1,8 @@
 <template>
-  <body>
-    <div class="join_onhead">
+  <main class="content_wrap">
+    <div class="title">
       <h1>회원가입</h1>
-      <div class="progress">
+      <div class="prog">
         <span class="inactive">01.약관동의 </span>
         <i class="fa-solid fa-caret-right"></i>
         <span class="now"> 02.정보입력 </span>
@@ -14,82 +14,128 @@
       <div class="vital"><span class="red">*</span> 별표 표시된 항목들은 필수 항목입니다.</div>
       <div class="background" @submit.prevent="onSubmitForm">
         <form id="sendForm">
-          <h2>보호자 정보</h2>
+          <h2 class="sub_title">보호자 정보</h2>
           <div class="input_row">
-            <label for="id" class="item">아이디 <span class="red">*</span></label>
-            <input type="text" id="id" v-model="user_id" :minlength="min_uid" :maxlength="max_uid" placeholder="영문, 숫자 조합 3~20자" @input="checkUid" />
-            <button @click.prevent="checkDuplicate($event)" v-bind:disabled="errorUid !== false">중복확인</button>
+            <label for="id" class="item">
+              <div class="bar"></div>아이디 <span class="red">*</span>
+            </label>
+            <div class="input_id">
+              <input type="text" id="id" v-model="user_id" :minlength="min_uid" :maxlength="max_uid" placeholder="영문, 숫자 조합 3~20자" @input="checkUidControl" />
+              <button class="id_check" @click.prevent="checkDuplicate($event)" v-bind:disabled="errorUid !== false">중복확인</button>
+            </div>
           </div>
-          <div class="warning_row"><p class="warning" v-show="errorUid">영문, 숫자 조합 3~20자</p></div>
-          <div class="warning_row"><p class="warning">{{ message }}</p></div>
-          <div class="input_row">
-            <label for="pw" class="item">비밀번호 <span class="red">*</span></label>
-            <input type="password" id="pw" v-model="user_pw" :minlength="min_upw" placeholder="영문, 숫자, 특수문자 조합 8자 이상" @input="checkUpw" />
+          <div class="warning_row">
+            <div class="warning_id">
+              <div class="warning" :class="{ active : errorUid }">영문, 숫자 조합 3~20자</div>
+              <div class="warning active" v-show="!errorUid">{{ message }}</div>
+            </div>
           </div>
-          <div class="warning_row"><p class="warning" v-show="errorUpw">영문, 숫자, 특수문자 조합 8자 이상</p></div>
           <div class="input_row">
-            <label for="pw_check" class="item">비밀번호 확인 <span class="red">*</span></label>
-            <input type="password" id="pw_check" v-model="user_pw_ck" placeholder="비밀번호 재입력" @input="checkUpw2" />
+            <label for="pw" class="item">
+              <div class="bar"></div>비밀번호 <span class="red">*</span>
+            </label>
+            <input type="password" id="user_pw_eye" v-model="user_pw" :minlength="min_upw" placeholder="영문, 숫자, 특수문자 조합 8자 이상" @input="checkUpw1" />
+            <div class="eye" @click="oneyes('user_pw_eye')"><i class="fa-solid fa-eye"></i></div>
           </div>
-          <div class="warning_row"><p class="warning" v-show="errorUpw2">비밀번호가 일치하지 않습니다.</p></div>
-          <div class="input_row">
-            <label for="name" class="item">이름 <span class="red">*</span></label>
-            <input type="text" id="name" v-model="user_nm" placeholder="이름 입력" @input="checkUnm" />
+          <div class="warning_row">
+            <div class="warning" :class="{ active : errorUpw }">영문, 숫자, 특수문자 조합 8자 이상</div>
           </div>
-          <div class="warning_row"><p class="warning" v-show="errorUnm">이름을 입력하세요.</p></div>
           <div class="input_row">
-            <label for="tel" class="item">전화번호 <span class="red">*</span></label>
-            <input type="tel" id="tel" @input="checkUph" v-model="user_ph" :minlength="min_uph" :maxlength="max_uph" placeholder="전화번호 입력" />
+            <label for="pw_check" class="item">
+              <div class="bar"></div>비밀번호 확인 <span class="red">*</span>
+            </label>
+            <input type="password" id="user_pw_ck_eye" v-model="user_pw_ck" placeholder="비밀번호 재입력" @input="checkUpw2"/>
+            <div class="eye" @click="oneyes('user_pw_ck_eye')"><i class="fa-solid fa-eye"></i></div>
           </div>
-          <div class="warning_row"><p class="warning" v-show="errorUph">전화번호를 입력하세요.</p></div>
-          <h2>펫(반려동물) 정보</h2>
-          <div class="input_row">
-            <label for="pet_no" class="item">동물등록번호 <span class="red">*</span></label>
-            <input type="text" id="pet_no" @input="checkPno" v-model="pet_no" :maxlength="max_pno" placeholder="등록번호 숫자 15자리" />
+          <div class="warning_row">
+            <div class="warning" :class="{ active : errorUpw2 }">비밀번호가 일치하지 않습니다.</div>
           </div>
-          <div class="warning_row"><p class="warning" v-show="errorPno">숫자 15자리</p></div>
           <div class="input_row">
-            <label for="pet_nm" class="item">펫 이름 <span class="red">*</span></label>
-            <input type="text" id="pet_nm" v-model="pet_nm" placeholder="펫이름 입력" @input="checkPnm">
+            <label for="name" class="item">
+              <div class="bar"></div>이름 <span class="red">*</span>
+            </label>
+            <input type="text" id="name" v-model="user_nm" @input="checkUnm" />
           </div>
-          <div class="warning_row"><p class="warning" v-show="errorPnm">펫 이름을 입력하세요.</p></div>
-          <div class="input_row">
-            <label for="pet_age" class="item">펫 나이 <span class="red">*</span></label>
-            <input type="text" id="pet_age" @input="checkPag" v-model="pet_age" placeholder="펫나이 숫자만" />
+          <div class="warning_row">
+            <div class="warning" :class="{ active : errorUnm }">이름을 입력하세요.</div>
           </div>
-          <div class="warning_row"><p class="warning" v-show="errorPag">펫 나이를 입력하세요.</p></div>
           <div class="input_row">
-            <div for="pet_sex" class="item">펫 성별 <span class="red">*</span></div>
-            <div class="sel_wrap">
-              <div class="sel_box">
-                <label for="female" class="sel_sex">
+            <label for="tel" class="item">
+              <div class="bar"></div>전화번호 <span class="red">*</span>
+            </label>
+            <input type="tel" id="tel" @input="checkUph" v-model="user_ph" :minlength="min_uph" :maxlength="max_uph"/>
+          </div>
+          <div class="warning_row">
+            <div class="warning" :class="{ active : errorUph }">전화번호를 입력하세요.</div>
+          </div>
+          <h2 class="sub_title">펫(반려동물) 정보</h2>
+          <div class="input_row">
+            <label for="pet_no" class="item">
+              <div class="bar"></div>동물등록번호 <span class="red">*</span>
+            </label>
+            <input type="text" id="pet_no" @input="checkPno" v-model="pet_no" :maxlength="max_pno" placeholder = "숫자 15자리">
+          </div>
+          <div class="warning_row">
+            <div class="warning" :class="{ active : errorPno }">숫자 15자리</div>
+          </div>
+          <div class="input_row">
+            <label for="pet_nm" class="item">
+              <div class="bar"></div>펫 이름 <span class="red">*</span>
+            </label>
+            <input type="text" id="pet_nm" v-model="pet_nm" @input="checkPnm">
+          </div>
+          <div class="warning_row">
+            <div class="warning" :class="{ active : errorPnm }">펫 이름을 입력하세요.</div>
+          </div>
+          <div class="input_row">
+            <label for="pet_age" class="item">
+              <div class="bar"></div>펫 나이 <span class="red">*</span>
+            </label>
+            <input type="text" id="pet_age" @input="checkPag" v-model="pet_age" placeholder="숫자만 입력">
+          </div>
+          <div class="warning_row">
+            <div class="warning" :class="{ active : errorPag }">펫 나이를 입력하세요.</div>
+          </div>
+          <div class="input_row">
+            <div class="item">
+              <div class="bar"></div>펫 성별 <span class="red">*</span>
+            </div>
+            <div class="radio_wrap">
+              <div class="radio_box">
+                <label for="female" class="radio_sex">
                   <input type="radio" id="female" name="sex" v-model="pet_sex" :value="1" @input="checkPsx" />
                   <span>암</span>
                 </label>
               </div>
-              <div class="sel_box">
-                <label for="male" class="sel_sex">
+              <div class="radio_box">
+                <label for="male" class="radio_sex">
                   <input type="radio" id="male" name="sex" v-model="pet_sex" :value="2" @input="checkPsx" />
                   <span>수</span>
                 </label>
               </div>
             </div>
           </div>
-          <div class="warning_row"><p class="warning" v-show="errorPsx">펫 성별을 선택하세요.</p></div>
-          <div class="input_row">
-            <label for="pet_type" class="item">펫 종류 <span class="red">*</span></label>
-            <input type="text" id="pet_type" v-model="pet_type" @input="checkPtp" placeholder="펫 종류 선택" />
+          <div class="warning_row">
+            <div class="warning" :class="{ active : errorPsx }">펫 성별을 선택하세요.</div>
           </div>
-          <div class="warning_row"><p class="warning" v-show="errorPtp">펫 종류를 선택하세요.</p></div>
+          <div class="input_row">
+            <label for="pet_type" class="item">
+              <div class="bar"></div>펫 종류 <span class="red">*</span>
+            </label>
+            <input type="text" id="pet_type" v-model="pet_type" @input="checkPtp"/>
+          </div>
+          <div class="warning_row">
+            <div class="warning" :class="{ active : errorPtp }">펫 종류를 선택하세요.</div>
+          </div>
           <div class="notice">전화번호는 회원님의 질문에 대한 답변과 입원한 환자에 대한 정보를 더 쉽게 제공하기 위한 용도로만 사용됩니다.</div>
           <div class="btn_wrap">
-            <button class="btn" type="submit" :disabled="check_final">가입</button>
-            <button class="btn" @click="goBack">뒤로가기</button>
+            <button class="button" type="submit" :disabled="check_final">가입</button>
+            <button class="button" @click="goBack">뒤로가기</button>
           </div>
         </form>
       </div>
     </div>
-  </body>
+  </main>
 </template>
 
 <script>
@@ -127,7 +173,6 @@ export default {
       min_upw: 8,
       min_uph: 10,
       max_uph: 11,
-      min_pno: 15,
       max_pno: 15,
     }
   },
@@ -160,14 +205,25 @@ export default {
           pet_age: this.pet_age,
           pet_sex: this.pet_sex,
           pet_type: this.pet_type,
+          user_pw_eye: '',
+          user_pw_ck_eye: '',
         },
       })
       .then(res => {
-        if (res.data.message == 'DB_error') {
-          this.$swal("DB 에러 발생")
+        if (res.data.message == 'already_exist_id') {
+          this.$swal({
+            icon: 'warning',
+            title: '이미 존재하는 아이디입니다.'
+          })
+        }
+        else if (res.data.message == 'DB_error') {
+          this.$swal({
+            icon: 'error',
+            title: 'DB 에러 발생'
+          })
         }
         else {
-          this.$router.push({ path: '/join3' }); // 회원가입3 화면으로 이동
+          this.$router.push({ path: '/join3' });
         }
       })
       .catch(err => {
@@ -230,7 +286,7 @@ export default {
       this[field] = input.replace(/\D/g, '');
     },
     goBack() {
-      this.$router.go(-1)
+      this.$router.go(-1);
     },
     checkUid() {
       const validateUid = /^\s*(?=.*[a-z])(?=.*\d)[a-z\d\s]{3,20}\s*$/i;
@@ -271,9 +327,18 @@ export default {
         console.log(error)
       })
     },
+    warningDup() {
+      if (this.errorUid) {
+        this.message = '';
+        this.errorDup = undefined;
+      }
+    },
+    checkUidControl() {
+      this.warningDup();
+      this.checkUid();
+    },
     checkUpw() {
       const validateUpw = /^\s*(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*()])[A-Za-z\d!@#$%^&*()]{8,}\s*$/;
-
       if (this.user_pw === '') {
         this.errorUpw = undefined
       } else if (validateUpw.test(this.user_pw)) {
@@ -282,15 +347,51 @@ export default {
         this.errorUpw = true
       }
     },
+    checkUpw1() {
+      this.checkUpw();
+      this.checkUpw2();
+    },
     checkUpw2() {
-
       if (this.user_pw_ck === '') {
         this.errorUpw2 = undefined
+        console.log(this.errorUpw2);
       } else if (this.user_pw_ck === this.user_pw) {
         this.errorUpw2 = false;
+        console.log(this.errorUpw2);
       } else {
         this.errorUpw2 = true;
+        console.log(this.errorUpw2);
       }
+    },
+    oneyes(field) {
+      const passwordInput = document.querySelector(`#${field}`);
+      const eyeIcon = document.querySelector(`#${field} + .eye`);
+      let isMouseDown = false;
+
+      eyeIcon.addEventListener("mousedown", () => {
+        passwordInput.type = "text";
+        eyeIcon.style = "color: var(--color-dark)";
+        isMouseDown = true;
+      });
+
+      document.addEventListener("mouseup", () => {
+        passwordInput.type = "password";
+        eyeIcon.style = "color: var(--color-gray)";
+        isMouseDown = false;
+      });
+
+      passwordInput.addEventListener("blur", () => {
+        passwordInput.type = "password";
+        eyeIcon.style = "color: var(--color-gray)";
+        isMouseDown = false;
+      });
+
+      passwordInput.addEventListener("focus", () => {
+        if (isMouseDown) {
+          passwordInput.type = "text";
+          eyeIcon.style = "color: var(--color-dark)";
+        }
+      });
     },
     checkUnm() {
 
@@ -321,7 +422,6 @@ export default {
       }
     },
     checkPnm() {
-      
       if (this.pet_nm !== '') {
         this.errorPnm = false;
       } else {
@@ -330,7 +430,7 @@ export default {
     },
     checkPag() {
       this.validateInput(this.pet_age, 'pet_age');
-
+      
       if (this.pet_age !== '') {
         this.errorPag = false;
       } else {
@@ -345,7 +445,6 @@ export default {
       }
     },
     checkPtp() {
-
       if (this.pet_type !== '') {
         this.errorPtp = false;
       } else {
@@ -353,11 +452,10 @@ export default {
       }
     },
   },
+
 }
-
-
 </script>
-
+<style src="../assets/css/profileInput.css" scoped></style>
 <style scoped>
 @import "../assets/css/global.css";
 
@@ -368,30 +466,28 @@ export default {
   user-select: none;
 }
 
-.join_onhead {
+.title {
   display: flex;
   justify-content: space-between;
   align-items: end;
-  padding: 10px 20px 0;
 }
 
-h1 {
-  font-size: var(--font-large);
-  font-weight: 500;
-}
-
-.progress {
+.prog {
   font-size: var(--font-regular);
 }
 
-.progress .inactive {
+.prog .inactive {
   color: var(--color-gray);
   font-weight: 400;
 }
 
-.progress .now {
+.prog .now {
   font-size: var(--font-medium);
   font-weight: 500;
+}
+
+.prog .fa-solid {
+  margin: 0 10px;
 }
 
 .join_wrap {
@@ -407,89 +503,89 @@ h1 {
   color: var(--color-red);
 }
 
-h2 {
+.sub_title {
   font-size: var(--font-medium);
   font-weight: 500;
   margin-bottom: 30px;
 }
 
-.input_row {
+.input_id {
+  width: 400px;
+  display: flex;
+}
+
+.id_check {
+  padding: 10px;
+  word-break: keep-all;
+  margin-left: 10px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.id_check:disabled {
+  cursor: initial;
+}
+
+.id_check:not(:disabled):hover {
+  color: var(--color-orange);
+  text-shadow: 0 0 10px var(--color-lightorange);
+}
+
+.warning_id {
+  width: 400px;
   display: flex;
   justify-content: space-between;
-  align-items: center;
 }
 
-.input_row .item {
-  font-size: var(--font-emp);
-  width: 200px;
-}
-
-.input_row>input {
-  width: 400px;
-  height: 50px;
-  border-radius: 25px;
-  border: var(--color-dark) 1px solid;
-  padding-left: 20px;
-  font-family: 'Noto Sans KR', sans-serif;
-  font-size: var(--font-regular);
-}
-
-.input_row>input:focus {
-  outline: 2px solid var(--color-lightorange);
-}
-
-.warning_row {
-  margin-top: 1px;
-  width: 100%;
-  margin-bottom: 30px;
-  display: flex;
-  justify-content: right;
+.warning_id>.warning {
+  width: auto !important;
 }
 
 .warning {
   width: 400px;
-  color: var(--color-red);
-}
-
-.sel_wrap {
-  width: 400px;
-  height: 50px;
-  display: flex;
-  align-items: center;
-}
-
-.sel_box {
-  display: block;
-  width: 50%;
-}
-
-.sel_sex {
-  font-size: var(--font-emp);
-  display: flex;
-  justify-content: left;
-  align-items: center;
-  width: 60px;
-  cursor: pointer;
-}
-
-.sel_sex input[type="radio"] {
-  margin-right: 5px;
-}
-
-.sel_sex span {
-  margin-bottom: 3px;
 }
 
 .notice {
   color: var(--color-dark);
-  margin: 30px 50px;
+  margin: 50px 100px;
+  word-break: keep-all;
+  text-align: center;
+}
+
+.input_row input:not([type=radio]):not([type=checkbox]) {
+  width: 400px;
+}
+
+.input_row {
+  position: relative;
+}
+
+.input_row #pw,
+.input_row #pw_check {
+  padding: 0 50px 0 20px;
+}
+
+.eye {
+  color: var(--color-gray);
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 50px;
+  width: 50px;
+  border-radius: 0 25px 25px 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 18px;
 }
 
 .btn_wrap {
-  margin: 0 auto;
-  width: 70%;
+  width: 100%;
   display: flex;
   justify-content: space-between;
 }
 
+.btn_wrap .button:first-child:disabled:hover {
+  box-shadow: none;
+}
 </style>

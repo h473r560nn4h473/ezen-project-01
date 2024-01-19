@@ -15,6 +15,7 @@ const upload = multer({
     },
 });
 
+// admin/goodswrite.vue
 router.post('/admin/add_goods', upload.single('goods_img'), (req, res) => {
     const { goods_nm, goods_price } = req.body;
     const goods_img = req.file.buffer;
@@ -51,7 +52,7 @@ router.post('/admin/add_goods', upload.single('goods_img'), (req, res) => {
     });
 });
 
-// 관리자 상품 리스트 
+// admin/goods.vue
 router.get('/admin/goodslist/:sortACase/:keyword', function (request, response, next) {
 
     const sortACase = request.params.sortACase;
@@ -74,7 +75,7 @@ router.get('/admin/goodslist/:sortACase/:keyword', function (request, response, 
     });
 });
 
-//상품수정페이지 진입
+// admin/goodsmodify.vue
 router.post('/admin/goodsmodify', (request, response) => {
     const goodsNo = request.body.goods_no;
 
@@ -87,7 +88,7 @@ router.post('/admin/goodsmodify', (request, response) => {
     });
 });
 
-// 상품 수정
+// admin/goodsmodify.vue
 router.post('/admin/update_goods', function (request, response, next) {
     const goods = request.body;
 
@@ -102,7 +103,7 @@ router.post('/admin/update_goods', function (request, response, next) {
     })
 })
 
-// 상품 제거
+// admin/goods.vue
 router.post('/admin/delete_goods', function (request, response, next) {
     const goods_no = request.body.GOODS_NO;
 
@@ -139,6 +140,27 @@ router.post('/admin/delete_goods', function (request, response, next) {
     })
 })
 
+// views/goodslist.vue
+router.get('/goodslist/:sortACase/:keyword', function (request, response, next) {
+    const sortACase = request.params.sortACase;
+    const keyword = request.params.keyword;
+
+    let search = '';
+
+    if (keyword != 'none') {
+        search = ' WHERE goods_nm Like "%' + keyword + '%" ';
+    }
+
+    const order = sortACaseReplace(sortACase);
+
+    db.query(sql.goods_list2 + search + order, function (error, results, fields) {
+        if (error) {
+            console.error(error);
+            return response.status(500).json({ error: '상품리스트에러' });
+        }
+        response.json(results);
+    });
+});
 //admin 상품목록 정렬 
 function sortACaseReplace(sortACase) {
     let order = ` ORDER BY goods_no DESC`; // 최근 등록 순
@@ -146,10 +168,10 @@ function sortACaseReplace(sortACase) {
         order = ` ORDER BY goods_no`;
     }
     if (sortACase == 2) { // 가격 높은 순
-        order = ` ORDER BY goods_price DESC`;
+        order = ` ORDER BY goods_price DESC, goods_no DESC`;
     }
     if (sortACase == 3) { // 가격 낮은 순
-        order = ` ORDER BY goods_price`;
+        order = ` ORDER BY goods_price, goods_no DESC`;
     }
     return order;
 }

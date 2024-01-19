@@ -1,31 +1,21 @@
 <template>
-  <div>
-    <Header />
-    <div class="content">
+    <div>
+      <Header />
       <router-view />
+      <Footer /> 
     </div>
-    <Footer />
-  </div>
-</template>
-
-
-<script>
-import Header from './header.vue'
-import Footer from './footer.vue'
-
-export default {
-  components: {
-    Header, Footer
+  </template>
+  
+  
+  <script>
+  import Header from './header.vue'
+  import Footer from './footer.vue'
+  
+  export default {
+    components: {
+      Header, Footer
+    }
   }
-}
-</script>
-
-<style>
-.content {
-  padding-top: 150px;
-  margin: auto;
-  height: 100%;
-  position: relative;
-  min-height: 100%;
-}
-</style>
+  </script>
+  
+  

@@ -11,16 +11,16 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 const authRouter = require('./routes/auth');
+const resRouter = require('./routes/reservation');
 const reviewRouter = require('./routes/review');
 const qnaRouter = require('./routes/qna');
-const reservationRouter = require('./routes/reservation');
 const mypageRouter = require('./routes/mypage');
 const goodsRouter = require('./routes/goods');
 
 app.use('/auth', authRouter);
+app.use('/reservation', resRouter);
 app.use('/review', reviewRouter);
 app.use('/qna', qnaRouter);
-app.use('/reservation', reservationRouter);
 app.use('/mypage', mypageRouter);
 app.use('/goods', goodsRouter);
 

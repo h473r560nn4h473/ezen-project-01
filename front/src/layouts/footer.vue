@@ -1,49 +1,78 @@
 <template>
-    <footer class="footer_form">
-        <div class="f_add">
-            <p>&copy; 2023</p>
-            <p>회사소개 | 개인정보처리방침 | 이용약관 | 사업자정보<br>
-            대표자 | PETERAN | 사업자등록번호 666-66-66666<br>주소 서울 종로구 종로 78 미려빌딩 이젠 아카데미 컴퓨터 학원<br>
-            팩스 | 66-666-6666 | 이메일 empty@naver.com</p>
+  <footer>
+    <div class="inner">
+      <div class="footer_logo">
+        <img src="../assets/logo-white.svg" alt="펫테랑동물병원">
+      </div>
+      <div class="vert_line"></div>
+      <div class="footer_info">
+        <div class="lou_info">
+          <p>서울시 종로구 미려빌딩 1층 펫테랑동물병원</p>
+          <p>대표자 : 임세인 | Tel : 02-345-6789</p>
+          <p>COPYRIGHT ⓒ 2023 펫테랑동물병원. ALL RIGHTS RESERVED.</p>
         </div>
-    </footer>
+      </div>
+      <div class="vert_line"></div>
+      <div class="p_info">
+        <a href="#">개인정보취급방침</a>
+      </div>
+      <div class="vert_line"></div>
+      <div class="call">
+        <div class="col">
+          <p>전화번호</p>
+          <p class="num">02 345 6789</p>
+        </div>
+        <div class="col">
+          <p>외래진료</p>
+          <p class="num">AM 09:00 - PM 10:00</p>
+        </div>
+      </div>
+    </div>
+  </footer>
 </template>
 
-<script>
-export default ({
+<style src="../assets/css/global.css" scoped />
+<style scoped>
 
-})
-</script>
-
-<style>
-  body{
-    margin: 0;
-    padding: 0;
-  }
-  
-.footer_form{
-    margin: 0;
-    padding: 0;
-    left: 0;   
-    bottom: 0;
-    list-style: none;
-    text-decoration: none;
-    /* border: solid 1px red; */
+footer {
+  min-height: 80px;
+  background: #333;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #eee;
+  font-weight: 300;
 }
-    .f_add{
-        position: relative;
-        height: auto;
-        width: 100%;
-        left: 0;       
-        bottom: 0; 
-        padding: 10px;
-        background: #f2f2f2;
-    }
 
-    p{
-        margin-left: 20px;
-        line-height: 24px;
-        font-size: 12px;
-        color: rgb(173, 173, 173);
-    }
+.inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 0;
+  width: 1374px;
+  margin: 0 auto;
+}
+
+.vert_line {
+  width: 1px;
+  height: 30px;
+  background-color: var(--color-gray);
+}
+
+.call {
+  display: flex;
+}
+
+.call .col:first-child {
+  margin-right: 20px;
+}
+
+.call .col p {
+  white-space: nowrap;
+}
+
+.num {
+  font-family: 'Cabin Condensed', sans-serif;
+  font-weight: 600;
+}
+
 </style>

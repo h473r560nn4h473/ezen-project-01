@@ -1,16 +1,16 @@
 <template>
-  <body>
-    <div class="join_wrap">
-      <div class="join_onhead">
-        <h1>회원가입</h1>
-        <div class="progress">
-          <span class="now">01.약관동의 </span>
-          <i class="fa-solid fa-caret-right"></i>
-          <span class="inactive"> 02.정보입력 </span>
-          <i class="fa-solid fa-caret-right"></i>
-          <span class="inactive"> 03.가입완료</span>
-        </div>
+  <main class="content_wrap">
+    <div class="title">
+      <h1>회원가입</h1>
+      <div class="prog">
+        <span class="now">01.약관동의</span>
+        <i class="fa-solid fa-caret-right"></i>
+        <span class="inactive">02.정보입력</span>
+        <i class="fa-solid fa-caret-right"></i>
+        <span class="inactive">03.가입완료</span>
       </div>
+    </div>
+    <div class="join_wrap">
       <div class="txt_wrap">
         <h2>회원가입약관</h2>
         <div id="termsOfService" class="txtbox">
@@ -495,11 +495,11 @@
         </div>
       </div>
       <div class="btn_wrap">
-        <button class="btn" :disabled="isButtonDisabled" @click="handleButtonClick">약관동의</button>
-        <button class="btn" @click="goBack">취소</button>
+        <button class="button" :disabled="isButtonDisabled" @click="handleButtonClick">약관동의</button>
+        <button class="button" @click="goBack">취소</button>
       </div>
     </div>
-  </body>
+  </main>
 </template>
 <script>
 export default {
@@ -527,49 +527,37 @@ export default {
 <style scoped>
 @import "../assets/css/global.css";
 
-* {
-  -webkit-touch-callout: none; /* iOS Safari */
-  -webkit-user-select: none; /* Safari */
-  -ms-user-select: none; /* 인터넷익스플로러 */
-  user-select: none;
-}
-
-.join_wrap {
-  width: 1100px;
-  margin: 0 auto 100px;
-}
-
-.join_onhead {
+.title {
   display: flex;
   justify-content: space-between;
   align-items: end;
-  padding: 10px 20px 0;
-  margin-bottom: 100px;
 }
 
-h1 {
-  font-size: var(--font-large);
-  font-weight: 500;
-}
-
-.progress {
+.prog {
   font-size: var(--font-regular);
 }
 
-.progress .inactive {
+.prog .inactive {
   color: var(--color-gray);
   font-weight: 400;
 }
 
-.progress .now {
-  font-size: var(--font-medium);
+.prog .now {
+  font-size: 18px;
   font-weight: 500;
 }
 
-.txt_wrap {
-  display: block;
+.prog .fa-solid {
+  margin: 0 10px;
+}
+
+.join_wrap {
   width: 600px;
   margin: 50px auto;
+}
+
+.txt_wrap {
+  margin-bottom: 50px;
 }
 
 .txt_wrap h2 {
@@ -601,6 +589,10 @@ h1 {
   border-radius: 5px;
 }
 
+.txtbox::-webkit-scrollbar-thumb:hover {
+  background-image: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2));
+}
+
 .agreement {
   display: flex;
   justify-content: right;
@@ -614,7 +606,7 @@ h1 {
   margin: 0 auto;
   display: flex;
   justify-content: space-between;
-  width: 600px;
+  width: 100%;
 }
 
 
