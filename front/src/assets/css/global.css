@@ -61,8 +61,9 @@ main.content_wrap {
   padding-bottom: 20px;
   margin-bottom: 50px;
   display: flex;
-  justify-content: left;
-  align-items: center;
+  justify-content: space-between;
+  align-items: end;
+  width: 100%;
 }
 
 .title h1 {
@@ -70,9 +71,10 @@ main.content_wrap {
   font-weight: 900;
   color: var(--color-orange);
   line-height: 1;
+  display: flex;
 }
 
-.title::before {
+.title h1::before {
   content: '';
   background-color: var(--color-orange);
   width: 4px;
@@ -81,10 +83,11 @@ main.content_wrap {
   margin-right: 14px;
 }
 
-.title::after {
+.title h1::after {
   content: 'Peteran Animal hospital';
   color: var(--color-orange);
   font-size: var(--font-small);
+  font-weight: 500;
   align-self: end;
   letter-spacing: -0.05rem;
   margin-left: 10px;

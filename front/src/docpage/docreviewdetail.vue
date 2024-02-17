@@ -117,7 +117,7 @@ export default {
     },
 		confirmEditContent() {
 			const formData = new FormData();
-			formData.append('rvw_no', this.reviewdetail[0].RVW_NO);
+			formData.append('rvw_no', this.reviewdetail[0].rvw_no);
       formData.append('rvw_title', this.reviewdetail[0].RVW_TITLE);
       formData.append('rvw_content', this.reviewdetail[0].RVW_CONTENT);
 			if (this.rvw_image) {

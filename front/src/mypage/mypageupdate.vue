@@ -5,8 +5,8 @@
       </div>
       <div class="wrap">
         <div  v-if="loginUser.user_social_tp == 0" class="input_row">
-          <label for="name" class="item"><div class="bar"></div>아이디</label>
-          <input type="text" id="name" v-model="loginUser.user_id" />
+          <label for="name" class="item" ><div class="bar"></div>아이디</label>
+          <input type="text" id="name" v-model="loginUser.user_id" readonly/>
         </div>
         <div  v-else class="input_row">
           <label for="name" class="item"><div class="bar"></div>아이디</label>

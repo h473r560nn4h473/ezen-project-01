@@ -181,17 +181,17 @@ else {
 });
 
 // admin/reviewdetail.vue
-router.post('/admin/reviewdetail', (request, response) => {
-    const reviewNo = request.body.rvw_no;
+// router.post('/admin/reviewdetail', (request, response) => {
+//     const reviewNo = request.body.rvw_no;
 
-    db.query(sql.reviewdetail, [reviewNo], function (error, results) {
-        if (error) {
-            console.error(error);
-            return response.status(500).json({ error: '내용로드에러' });
-        }
-        response.json(results);
-    });
-});
+//     db.query(sql.reviewdetail, [reviewNo], function (error, results) {
+//         if (error) {
+//             console.error(error);
+//             return response.status(500).json({ error: '내용로드에러' });
+//         }
+//         response.json(results);
+//     });
+// });
 
 // admin/review.vue
 router.get('/admin/reviewlist/:sortACase/:keyword', function (request, response, next) {
@@ -229,28 +229,28 @@ router.delete('/admin/reviewlist/:rvw_no', function (request, response, next) {
     });
 });
 
-router.post('/admin/reviewdetail', (request, response) => {
-    const reviewNo = request.body.rvw_no;
+// router.post('/admin/reviewdetail', (request, response) => {
+//     const reviewNo = request.body.rvw_no;
 
-    db.query(sql.reviewdetail, [reviewNo], function (error, results) {
-        if (error) {
-            console.error(error);
-            return response.status(500).json({ error: '내용로드에러' });
-        }
-        response.json(results);
-    });
-});
+//     db.query(sql.reviewdetail, [reviewNo], function (error, results) {
+//         if (error) {
+//             console.error(error);
+//             return response.status(500).json({ error: '내용로드에러' });
+//         }
+//         response.json(results);
+//     });
+// });
 
-router.post('/admin/reviewdetail/reviewedit', (request, response) => {
-    const aReviewEdit = request.body;
-    db.query(sql.reviewEdit, [aReviewEdit.title, aReviewEdit.content, aReviewEdit.number], function (error, result) {
-        if (error) {
-            console.error(error);
-            return response.status(500).json({ error: 'error' });
-        } else {
-            response.send(result);
-        }
-    })
-});
+// router.post('/admin/reviewdetail/reviewedit', (request, response) => {
+//     const aReviewEdit = request.body;
+//     db.query(sql.reviewEdit, [aReviewEdit.title, aReviewEdit.content, aReviewEdit.number], function (error, result) {
+//         if (error) {
+//             console.error(error);
+//             return response.status(500).json({ error: 'error' });
+//         } else {
+//             response.send(result);
+//         }
+//     })
+// });
 
 module.exports = router;

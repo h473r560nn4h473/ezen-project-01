@@ -40,19 +40,6 @@ export default {
 <style scoped>
 @import "../assets/css/global.css";
 
-* {
-  -webkit-touch-callout: none; /* iOS Safari */
-  -webkit-user-select: none; /* Safari */
-  -ms-user-select: none; /* 인터넷익스플로러 */
-  user-select: none;
-}
-
-.title {
-  display: flex;
-  justify-content: space-between;
-  align-items: end;
-}
-
 .prog {
   font-size: var(--font-regular);
 }
@@ -63,7 +50,7 @@ export default {
 }
 
 .prog .now {
-  font-size: var(--font-medium);
+  font-size: 18px;
   font-weight: 500;
 }
 
@@ -72,8 +59,8 @@ export default {
 }
 
 .txt_wrap {
-  margin: 50px auto;
   width: 600px;
+  margin: 50px auto;
 }
 
 .img {

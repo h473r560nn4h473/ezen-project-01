@@ -50,11 +50,10 @@ export default {
   },
   computed: {
     user() {
-      return this.$store.state.user; // user 정보가 바뀔 때마다 자동으로 user() 갱신
+      return this.$store.state.user;
     },
   },
   mounted() {
-    //console.log(this.naverLogin.user);
     this.naverLogin = new window.naver.LoginWithNaverId({
       clientId: "WVOOppNGu8IOY9Zw_L3v",
       callbackUrl: "http://localhost:8080",
@@ -63,7 +62,6 @@ export default {
         color: "green", type: 3, width: "100%", height: 50,
       },
     });
-    //this.$store.commit("naverLogin", this.naverLogin);
 
     this.naverLogin.init();
 
@@ -73,13 +71,9 @@ export default {
         console.log(this.naverLogin.user.nickname);
 
         const email = this.naverLogin.user.email;
-        //const id = this.naverLogin.user.id;
-        //const nick = this.naverLogin.user.nickname;
 
         this.naver_id = email;
         console.log(email)
-        //console.log(nick)
-
       } else {
         console.log("callback처리 실패");
       }
@@ -117,8 +111,6 @@ export default {
               timer: 1500
             })
             this.$router.push({ path: '/' }); 
-            
-            // 메인 화면으로 이동
           }
         })
         .catch(err => {

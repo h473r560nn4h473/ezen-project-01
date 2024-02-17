@@ -85,15 +85,9 @@
             <th scope="row">{{ pageNum * onePageCnt + i + 1 }}</th>
             <td>{{ review.PET_NO }}</td>
             <td>{{ review.DOC_NM }}</td>
-            <td>
-              {{ review.RVW_TITLE }}
-            </td>
-            <td>
-              {{ formatDateTime(review.RVW_DATE) }}
-            </td>
-            <td>
-              {{ review.RVW_COUNT }}
-            </td>
+            <td>{{ review.RVW_TITLE }}</td>
+            <td>{{ formatDateTime(review.RVW_DATE) }}</td>
+            <td>{{ review.RVW_COUNT }}</td>
             <td>
               <button
                 class="btn btn-outline-danger"
@@ -191,6 +185,7 @@ export default {
         start,
         start + this.onePageCnt
       );
+      // console.log(this.pageReviewList);
     },
     async getReviewList(sortACaseNum) {
       let keyword = "none";
@@ -256,7 +251,7 @@ export default {
       console.log("삭제 버튼 클릭 - 진료기록:", review);
       try {
         const response = await axios.delete(
-          `http://localhost:3000/review/admin/reviewlist/${review.RVW_NO}`
+          `http://localhost:3000/review/admin/reviewlist/${review.rvw_no}`
         );
         console.log("진료기록 삭제 성공:", response.data);
         this.reviewList = this.reviewList.filter(

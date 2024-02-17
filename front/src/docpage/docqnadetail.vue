@@ -23,7 +23,7 @@
 					</div>	
 					<div class="input_row textarea_row">
 						<div class="textarea_title"><span class="bar"></span>답변</div>
-						<div v-if="qnalist[0].QNA_STATE == 1" class="textarea_box" v-show="!editable" v-html="qna_answer"></div>
+						<div v-if="qnalist[0].qna_state == 1" class="textarea_box" v-show="!editable" v-html="qna_answer"></div>
 						<div v-else class="textarea_box" v-show="!editable">답변 없음</div>
 						<textarea type="text" v-show="editable" v-model="qnalist[0].QNA_ANSWER"></textarea>
 					</div>

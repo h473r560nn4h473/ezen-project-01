@@ -527,12 +527,6 @@ export default {
 <style scoped>
 @import "../assets/css/global.css";
 
-.title {
-  display: flex;
-  justify-content: space-between;
-  align-items: end;
-}
-
 .prog {
   font-size: var(--font-regular);
 }

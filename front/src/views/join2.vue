@@ -1,13 +1,15 @@
 <template>
   <main class="content_wrap">
-    <div class="title">
-      <h1>회원가입</h1>
-      <div class="prog">
-        <span class="inactive">01.약관동의 </span>
-        <i class="fa-solid fa-caret-right"></i>
-        <span class="now"> 02.정보입력 </span>
-        <i class="fa-solid fa-caret-right"></i>
-        <span class="inactive"> 03.가입완료</span>
+    <div class="title_wrap">
+      <div class="title">
+        <h1>회원가입</h1>
+        <div class="prog">
+          <span class="inactive">01.약관동의 </span>
+          <i class="fa-solid fa-caret-right"></i>
+          <span class="now"> 02.정보입력 </span>
+          <i class="fa-solid fa-caret-right"></i>
+          <span class="inactive"> 03.가입완료</span>
+        </div>
       </div>
     </div>
     <div class="join_wrap">
@@ -68,7 +70,7 @@
           <div class="warning_row">
             <div class="warning" :class="{ active : errorUph }">전화번호를 입력하세요.</div>
           </div>
-          <h2 class="sub_title">펫(반려동물) 정보</h2>
+          <h2 class="sub_title">펫 정보</h2>
           <div class="input_row">
             <label for="pet_no" class="item">
               <div class="bar"></div>동물등록번호 <span class="red">*</span>
@@ -76,7 +78,7 @@
             <input type="text" id="pet_no" @input="checkPno" v-model="pet_no" :maxlength="max_pno" placeholder = "숫자 15자리">
           </div>
           <div class="warning_row">
-            <div class="warning" :class="{ active : errorPno }">숫자 15자리</div>
+            <div class="warning" :class="{ active : errorPno }">동물등록번호를 입력하세요.</div>
           </div>
           <div class="input_row">
             <label for="pet_nm" class="item">
@@ -125,7 +127,7 @@
             <input type="text" id="pet_type" v-model="pet_type" @input="checkPtp"/>
           </div>
           <div class="warning_row">
-            <div class="warning" :class="{ active : errorPtp }">펫 종류를 선택하세요.</div>
+            <div class="warning" :class="{ active : errorPtp }">펫 종류를 입력하세요.</div>
           </div>
           <div class="notice">전화번호는 회원님의 질문에 대한 답변과 입원한 환자에 대한 정보를 더 쉽게 제공하기 위한 용도로만 사용됩니다.</div>
           <div class="btn_wrap">
@@ -459,19 +461,6 @@ export default {
 <style scoped>
 @import "../assets/css/global.css";
 
-* {
-  -webkit-touch-callout: none; /* iOS Safari */
-  -webkit-user-select: none; /* Safari */
-  -ms-user-select: none; /* 인터넷익스플로러 */
-  user-select: none;
-}
-
-.title {
-  display: flex;
-  justify-content: space-between;
-  align-items: end;
-}
-
 .prog {
   font-size: var(--font-regular);
 }
@@ -482,7 +471,7 @@ export default {
 }
 
 .prog .now {
-  font-size: var(--font-medium);
+  font-size: 18px;
   font-weight: 500;
 }
 
@@ -491,8 +480,8 @@ export default {
 }
 
 .join_wrap {
-  margin: 50px auto;
   width: 600px;
+  margin: 50px auto;
 }
 
 .vital {

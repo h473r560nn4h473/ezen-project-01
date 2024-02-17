@@ -36,8 +36,8 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(review, i) in pageReviewList" :key="i" @click="movetonreview(review.RVW_NO)">
-              <td>{{ review.RVW_NO }}</td>
+            <tr v-for="(review, i) in pageReviewList" :key="i" @click="movetonreview(review.rvw_no)">
+              <td>{{ review.rvw_no }}</td>
               <td class="ellipsis">{{ review.RVW_TITLE }}</td>
               <td>{{ review.DOC_NM }}</td>
               <td>{{ formatDateTime(review.RVW_DATE) }}</td>

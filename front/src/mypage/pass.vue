@@ -26,8 +26,7 @@
           <div class="eye" @click="oneyes('user_npw_ck')"><i class="fa-solid fa-eye"></i></div>
         </div>
         <div class="warning_row">
-          <div class="warning" :class="{ active: user_npw_ck !== '' && !isPasswordValid(user_npw_ck) }">영문, 숫자, 특수문자 조합 8자
-            이상</div>
+          <div class="warning" :class="{ active: user_npw_ck !== '' && !isPasswordValid(user_npw_ck) }">입력된 새 비밀번호와 일치하지 않습니다.</div>
         </div>
       </div>
       <div class="btn_row">

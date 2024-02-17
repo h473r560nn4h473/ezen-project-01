@@ -20,9 +20,9 @@
             <tr
               v-for="(review, i) in pageReviewList"
               :key="i"
-              @click="movetodreview(review.RVW_NO)"
+              @click="movetodreview(review.rvw_no)"
             >
-              <td>{{ review.RVW_NO }}</td>
+              <td>{{ review.rvw_no }}</td>
               <td>{{ review.PET_NO }}</td>
               <td>{{ review.DOC_NM }}</td>
               <td class="ellipsis">{{ review.RVW_TITLE }}</td>
@@ -168,7 +168,7 @@ export default {
       console.log("삭제 버튼 클릭 - 진료기록:", review);
       try {
         const response = await axios.delete(
-          `http://localhost:3000/mypage/docpage/docreview/${review.RVW_NO}`
+          `http://localhost:3000/mypage/docpage/docreview/${review.rvw_no}`
         );
         console.log("진료기록 삭제 성공:", response.data);
         this.reviewList = this.reviewList.filter(
